@@ -1,0 +1,11 @@
+{
+    "name": "tichu-ts",
+    "private": "true",
+    "workspaces": {
+        "packages": [
+            "client",
+            "server",
+            "shared"
+        ]
+    }
+}
