@@ -2,5 +2,5 @@ services:
   tichu-ts-server:
     build:
       target: production
-    command: node dist/index.js
+    command: yarn run start
   
