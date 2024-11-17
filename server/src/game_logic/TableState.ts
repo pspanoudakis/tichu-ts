@@ -1,5 +1,5 @@
 import { CardCombination } from "./CardCombinations";
-import { CardInfo } from "./CardInfo";
+import { CardInfo } from "@tichu-ts/shared/game-logic/CardInfo";
 
 export class TableState {
     private _previousCards: Array<CardInfo> = [];

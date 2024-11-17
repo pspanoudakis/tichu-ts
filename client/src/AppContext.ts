@@ -470,7 +470,7 @@ export function handleCardRequestedEvent(
 }
 
 export function handlePendingDragonDecisionEvent(
-    e: PendingDragonDecisionEvent,
+    _: PendingDragonDecisionEvent,
     setCtxState?: AppContextStateSetter,
 ) {
     setCtxState?.(s => {
@@ -513,7 +513,7 @@ export function handleGameRoundEndedEvent(
 }
 
 export function handleGameEndedEvent(
-    s: AppContextState, e: GameEndedEvent
+    s: AppContextState, _: GameEndedEvent
 ): AppContextState {
     return {
         ...s,
@@ -552,7 +552,7 @@ export function handlePlayerLeftEvent(
 }
 
 export function handleGameStartedEvent(
-    s: AppContextState, e: GameStartedEvent
+    s: AppContextState, _: GameStartedEvent
 ): AppContextState {
     return {
         ...s,

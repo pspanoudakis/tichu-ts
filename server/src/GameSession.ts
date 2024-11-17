@@ -23,17 +23,17 @@ import {
     zGiveDragonEvent,
     zSendMessageEvent,
     zJoinGameEvent
-} from "./schemas/events/ClientEvents";
+} from "@tichu-ts/shared/game-logic/ClientEvents";
 import { GameState } from "./game_logic/GameState";
 import {
     ErrorEvent,
     MessageSentEvent,
     ServerEventType,
     WaitingForJoinEvent
-} from "./schemas/events/ServerEvents";
+} from "@tichu-ts/shared/game-logic/ServerEvents";
 import { BusinessError } from "./game_logic/BusinessError";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-import { GameEvent } from "./schemas/events/GameEvent";
+import { GameEvent } from "@tichu-ts/shared/game-logic/GameEvent";
 import { ChatMessage } from "./game_logic/ChatMessage";
 import { PLAYER_KEYS, PlayerKey } from "./game_logic/PlayerKeys";
 import { extractErrorInfo } from "./schemas/API";

@@ -1,11 +1,9 @@
 services:
   tichu-ts-server:
     build:
-      context: ./server
-      dockerfile: ./Dockerfile
+      context: ./
+      dockerfile: ./server/Dockerfile
       target: base
-    volumes:
-      - ./server/src:/home/node/app/src
     container_name: tichu-ts-server
     expose:
       - '8080'

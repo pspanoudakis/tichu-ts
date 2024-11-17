@@ -10,7 +10,7 @@ import {
     RequestCardEvent,
     RevealAllCardsEvent,
     TradeCardsEvent
-} from "../schemas/events/ClientEvents";
+} from "@tichu-ts/shared/game-logic/ClientEvents";
 import {
     AllCardsRevealedEvent,
     BetPlacedEvent,
@@ -30,11 +30,11 @@ import {
     TableRoundEndedEvent,
     TableRoundStartedEvent,
     TurnPassedEvent
-} from "../schemas/events/ServerEvents";
+} from "@tichu-ts/shared/game-logic/ServerEvents";
 import { EventBase } from "../GameSession";
 import { BusinessError } from "./BusinessError";
 import { UnexpectedCombinationType } from "./CardCombinations";
-import { CardInfo } from "./CardInfo";
+import { CardInfo } from "@tichu-ts/shared/game-logic/CardInfo";
 import { GameRoundState } from "./GameRoundState";
 import {
     PLAYER_KEYS,

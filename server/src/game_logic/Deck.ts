@@ -1,5 +1,5 @@
-import { cardColorValues, NormalCardConfig, SpecialCards } from "./CardConfig";
-import { CardInfo, PhoenixCard } from "./CardInfo";
+import { cardColorValues, NormalCardConfig, SpecialCards } from "@tichu-ts/shared/game-logic/CardConfig";
+import { CardInfo, PhoenixCard } from "@tichu-ts/shared/game-logic/CardInfo";
 
 /** Represents a shuffled card deck. */
 export class Deck {

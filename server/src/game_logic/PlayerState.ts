@@ -1,7 +1,7 @@
-import { PlaceBetEvent, TradeCardsEvent } from "../schemas/events/ClientEvents";
+import { PlaceBetEvent, TradeCardsEvent } from "@tichu-ts/shared/game-logic/ClientEvents";
 import { BusinessError } from "./BusinessError";
-import { SpecialCards } from "./CardConfig";
-import { CardInfo } from "./CardInfo";
+import { SpecialCards } from "@tichu-ts/shared/game-logic/CardConfig";
+import { CardInfo } from "@tichu-ts/shared/game-logic/CardInfo";
 import { PlayerKey } from "./PlayerKeys";
 
 type PlayerTradeDecisions = {
