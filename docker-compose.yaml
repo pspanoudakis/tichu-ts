@@ -10,3 +10,14 @@ services:
     ports:
       - '8080:8080'
     command: yarn run dev
+  tichu-ts-client:
+    build:
+      context: ./
+      dockerfile: ./client/Dockerfile
+      target: base
+    container_name: tichu-ts-client
+    expose:
+      - '3000'
+    ports:
+      - '3000:3000'
+    command: yarn run dev

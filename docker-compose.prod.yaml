@@ -3,4 +3,8 @@ services:
     build:
       target: production
     command: yarn run start
+  tichu-ts-client:
+    build:
+      target: production
+    command: yarn run preview
   

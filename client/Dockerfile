@@ -1,17 +1,15 @@
 FROM node:20-alpine AS base
 WORKDIR /home/node/app
-RUN mkdir ./server
+RUN mkdir ./client
 RUN mkdir ./shared
-COPY ./server/package.json ./server
-COPY ./server/tsconfig.json ./server
-COPY ./server/src ./server/src
+COPY ./client ./client
 COPY ./shared ./shared
 COPY ./package.json ./
 COPY ./tsconfig.json ./
 RUN yarn
-WORKDIR /home/node/app/server
+WORKDIR /home/node/app/client
 
 FROM base AS production
 ENV NODE_PATH=./dist
-WORKDIR /home/node/app/server
+WORKDIR /home/node/app/client
 RUN yarn run build
