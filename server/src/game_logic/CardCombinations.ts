@@ -698,7 +698,7 @@ export class Bomb extends CardCombination {
      * @returns The `Bomb` combination, or `null` if it was not found.
      */
     static getStrongestRequested(cards: Array<CardInfo>, requested: string) {
-        let strongestBomb = null;
+        let strongestBomb: Bomb | null = null;
 
         let normalCardsColorMap: CardColorOccurencesMap = {};
         for (const key of normalCardNames) {
@@ -719,7 +719,7 @@ export class Bomb extends CardCombination {
             if (targetColorMap.get(color) === true) {
                 let upperIndex = -1, lowerIndex = -1;
                 let lengthCounter = 0;
-                let colorStrongest = null;
+                let colorStrongest: Bomb | null = null;
 
                 for (let i = 0; i < cardColorsArray.length; i++) {
                     const [, colors] = cardColorsArray[i];
@@ -775,7 +775,7 @@ export class Bomb extends CardCombination {
      * @returns The strongest `Bomb` combination, or `null` if there isn't one.
      */
     static getStrongestBomb(cards: Array<CardInfo>) {
-        let strongestBomb = null;
+        let strongestBomb: Bomb | null = null;
 
         let groupedNormalCards: CardColorOccurencesMap = {};
         for (const key of normalCardNames) {
@@ -795,7 +795,7 @@ export class Bomb extends CardCombination {
         for (const color of cardColorValues) {
             let upperIndex = -1, lowerIndex = -1;
             let lengthCounter = 0;
-            let colorStrongest = null;
+            let colorStrongest: Bomb | null = null;
             for (let i = 0; i < cardGroupArray.length; i++) {
                 const [, colors] = cardGroupArray[i];
                 if (colors.get(color) === false) {

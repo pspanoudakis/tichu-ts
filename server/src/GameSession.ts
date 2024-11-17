@@ -1,4 +1,4 @@
-import { Namespace, Server, Socket } from "socket.io";
+import { DefaultEventsMap, Namespace, Server, Socket } from "socket.io";
 import { GameClient } from "./GameClient";
 import {
     ClientEventType,
@@ -32,7 +32,6 @@ import {
     WaitingForJoinEvent
 } from "@tichu-ts/shared/game-logic/ServerEvents";
 import { BusinessError } from "./game_logic/BusinessError";
-import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { GameEvent } from "@tichu-ts/shared/game-logic/GameEvent";
 import { ChatMessage } from "./game_logic/ChatMessage";
 import { PLAYER_KEYS, PlayerKey } from "./game_logic/PlayerKeys";
