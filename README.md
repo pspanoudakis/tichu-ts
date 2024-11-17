@@ -33,9 +33,10 @@ both by client and server
 ## Previous projects
 Initially, client and server were separate repositories:
 - Client: [tichu-js](https://github.com/pspanoudakis/tichu-js)
-The client app started as a single-player simulation, without server.
-It is currently deployed on [Netlify](https://www.netlify.com/),
-you can check it out [here](https://lucid-williams-1b1e7c.netlify.app/).
+
+    The client app started as a single-player simulation, without server.
+    It is currently deployed on [Netlify](https://www.netlify.com/),
+    you can check it out [here](https://lucid-williams-1b1e7c.netlify.app/).
 The look and feel of the UI has not changed in this project.
 - Server: [tichu-ts-server](https://github.com/pspanoudakis/tichu-ts-server)
 
