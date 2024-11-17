@@ -10,5 +10,5 @@ services:
       - '3001'
     ports:
       - '3001:3001'
-    command: yarn run preview --host
+    command: yarn run preview
   
