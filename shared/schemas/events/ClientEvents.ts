@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { createGameEventSchema } from "./GameEvent";
-import { PlayerBet, zPlayerKey } from "../game-logic/shared";
-import { zCardKey, zCardName, zNormalCardName } from "../game-logic/CardConfig";
+import { zCardKey, zCardName, zNormalCardName } from "../../game_logic/CardConfig";
+import { zPlayerKey } from "../../game_logic/PlayerKeys";
+import { PlayerBet } from "../../game_logic/PlayerBet";
 
 export const ClientEventType =  {
     JOIN_GAME: 'JOIN_GAME',

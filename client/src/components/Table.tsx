@@ -20,13 +20,13 @@ import {
     zPendingDragonDecisionEvent,
     zTableRoundEndedEvent,
     zTurnPassedEvent
-} from "@tichu-ts/shared/events/ServerEvents";
+} from "@tichu-ts/shared/schemas/events/ServerEvents";
 import styles from "../styles/Components.module.css";
 import { Card } from "./Card";
 import { UICardInfo } from "../game_logic/UICardInfo";
 import { DragonSelectionContainer } from "./DragonSelectionContainer";
 import { usePlayerAccessProperty } from "../hooks/usePlayerAccessProperty";
-import { getCardConfigByKey } from "@tichu-ts/shared/game-logic/CardConfig";
+import { getCardConfigByKey } from "@tichu-ts/shared/game_logic/CardConfig";
 
 export const Table: React.FC<{}> = () => {
 

@@ -1,6 +1,6 @@
 import { useCallback, useContext } from "react";
 import { AppContext } from "../AppContext";
-import { ClientEventType, PassTurnEvent } from "@tichu-ts/shared/events/ClientEvents";
+import { ClientEventType, PassTurnEvent } from "@tichu-ts/shared/schemas/events/ClientEvents";
 
 export const PassTurnButton: React.FC<{}> = () => {
 

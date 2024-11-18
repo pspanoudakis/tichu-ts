@@ -1,4 +1,4 @@
-import { PlayerKey } from "./game_logic/PlayerKeys";
+import { PlayerKey } from "@tichu-ts/shared/game_logic/PlayerKeys";
 import { BusinessError } from "./game_logic/BusinessError";
 
 export class GameClient {

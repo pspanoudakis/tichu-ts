@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useMemo } from "react";
-import { ClientEventType, PlaceBetEvent } from "@tichu-ts/shared/events/ClientEvents";
-import { PlayerBet } from "@tichu-ts/shared/game-logic/shared";
+import { ClientEventType, PlaceBetEvent } from "@tichu-ts/shared/schemas/events/ClientEvents";
 import { AppContext } from "../AppContext";
+import { PlayerBet } from "@tichu-ts/shared/game_logic/PlayerBet";
 
 type AllowedBet = PlayerBet.TICHU | PlayerBet.GRAND_TICHU
 

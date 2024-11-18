@@ -18,10 +18,11 @@ import {
     TableRoundStartedEvent,
     TurnPassedEvent,
     WaitingForJoinEvent
-} from '@tichu-ts/shared/game-logic/ServerEvents';
-import { PLAYER_KEYS, PlayerBet } from '@tichu-ts/shared/game-logic/shared';
+} from '@tichu-ts/shared/schemas/events/ServerEvents';
 import { TradeDecisions } from './game_logic/TradeDecisions';
 import { GameRoundState } from './state_types/GameRoundState';
+import { PLAYER_KEYS } from '@tichu-ts/shared/game_logic/PlayerKeys';
+import { PlayerBet } from '@tichu-ts/shared/game_logic/PlayerBet';
 
 export type AppContextState = {
     gameContext: GameState,

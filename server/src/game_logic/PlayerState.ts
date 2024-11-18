@@ -1,21 +1,15 @@
-import { PlaceBetEvent, TradeCardsEvent } from "@tichu-ts/shared/events/ClientEvents";
+import { PlaceBetEvent, TradeCardsEvent } from "@tichu-ts/shared/schemas/events/ClientEvents";
 import { BusinessError } from "./BusinessError";
-import { SpecialCards } from "@tichu-ts/shared/game-logic/CardConfig";
-import { CardInfo } from "@tichu-ts/shared/game-logic/CardInfo";
-import { PlayerKey } from "./PlayerKeys";
+import { SpecialCards } from "@tichu-ts/shared/game_logic/CardConfig";
+import { CardInfo } from "@tichu-ts/shared/game_logic/CardInfo";
+import { PlayerKey } from "@tichu-ts/shared/game_logic/PlayerKeys";
+import { PlayerBet } from "@tichu-ts/shared/game_logic/PlayerBet";
 
 type PlayerTradeDecisions = {
     teammate: CardInfo,
     left: CardInfo,
     right: CardInfo,
 };
-
-/** Possible player bet points */
-export enum PlayerBet {
-    NONE = 0,
-    TICHU = 100,
-    GRAND_TICHU = 200
-}
 
 export class PlayerState {
     readonly playerKey: PlayerKey;

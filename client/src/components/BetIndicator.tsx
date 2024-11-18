@@ -1,6 +1,6 @@
 import React from 'react';
 import { grandTichuBetDivClass, tichuBetDivClass } from "./styleUtils";
-import { PlayerBet } from '@tichu-ts/shared';
+import { PlayerBet } from '@tichu-ts/shared/game_logic/PlayerBet';
 
 export const BetIndicator: React.FC<{
     bet?: PlayerBet

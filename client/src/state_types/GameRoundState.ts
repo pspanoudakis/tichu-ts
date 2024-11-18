@@ -1,6 +1,7 @@
-import { NormalCardName, PlayerKey } from "@tichu-ts/shared";
+import { NormalCardName } from "@tichu-ts/shared";
 import { PlayerRoundStateBase, ThisPlayerState } from "./PlayerState";
 import { TableState } from "./TableState";
+import { PlayerKey } from "@tichu-ts/shared/game_logic/PlayerKeys";
 
 type GameRoundPhase = 'TRADES' | 'MAIN' | 'OVER';
 

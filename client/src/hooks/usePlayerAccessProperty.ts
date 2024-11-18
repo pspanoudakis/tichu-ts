@@ -1,6 +1,6 @@
 import { useContext, useMemo } from "react";
 import { AppContext } from "../AppContext";
-import { PlayerKey } from "@tichu-ts/shared";
+import { PlayerKey } from "@tichu-ts/shared/game_logic/PlayerKeys";
 
 export const usePlayerAccessProperty = (playerKey?: PlayerKey) => {
 

@@ -1,9 +1,9 @@
 import React, { useContext, useMemo } from "react";
 import { PlayerInfoHeader } from "./PlayerInfoHeader";
 import { inGamePlayerBoxClass } from "./styleUtils";
-import { PlayerKey } from "@tichu-ts/shared/game-logic/shared";
 import { AppContext } from "../AppContext";
 import { usePlayerAccessProperty } from "../hooks/usePlayerAccessProperty";
+import { PlayerKey } from "@tichu-ts/shared/game_logic/PlayerKeys";
 
 export const InGamePlayerBoxWrapper: React.FC<{
     playerKey?: PlayerKey,

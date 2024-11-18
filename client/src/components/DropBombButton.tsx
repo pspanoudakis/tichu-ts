@@ -1,6 +1,6 @@
 import { useCallback, useContext } from "react";
 import { AppContext } from "../AppContext";
-import { ClientEventType, DropBombEvent } from "@tichu-ts/shared/events/ClientEvents";
+import { ClientEventType, DropBombEvent } from "@tichu-ts/shared/schemas/events/ClientEvents";
 
 export const DropBombButton: React.FC<{}> = () => {
 

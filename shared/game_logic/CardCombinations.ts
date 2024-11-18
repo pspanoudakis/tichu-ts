@@ -5,8 +5,8 @@ import {
     NormalCardName,
     specialCardNames,
     SpecialCards
-} from "@tichu-ts/shared/game-logic/CardConfig";
-import { CardInfo, PhoenixCard } from "@tichu-ts/shared/game-logic/CardInfo";
+} from "./CardConfig";
+import { CardInfo, PhoenixCard } from "./CardInfo";
 
 interface CardColorOccurencesMap {
     [cardName: string]: Map<string, boolean>;

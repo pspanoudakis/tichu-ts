@@ -1,15 +1,12 @@
 import { z } from "zod";
 import { createGameEventSchema } from "./GameEvent";
-import {
-    CardCombinationType,
-    ERROR_TYPES,
-    PlayerBet,
-    PlayerKey,
-    zGameWinnerResult,
-    zPlayerKey,
-    zRoundScore
-} from "../game-logic/shared";
-import { zCardKey, zNormalCardName } from "../game-logic/CardConfig";
+import { zCardKey, zNormalCardName } from "../../game_logic/CardConfig";
+import { PlayerKey, zPlayerKey } from "../../game_logic/PlayerKeys";
+import { CardCombinationType } from "../../game_logic/CardCombinations";
+import { PlayerBet } from "../../game_logic/PlayerBet";
+import { zRoundScore } from "../../game_logic/RoundScore";
+import { zGameWinnerResult } from "../../game_logic/GameWinnerResult";
+import { ERROR_TYPES } from "../API";
 
 export const ServerEventType = {
     WAITING_4_JOIN: 'WAITING_4_JOIN',

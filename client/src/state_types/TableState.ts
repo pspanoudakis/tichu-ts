@@ -1,4 +1,5 @@
-import { CardCombinationType, PlayerKey } from "@tichu-ts/shared";
+import { CardCombinationType } from "@tichu-ts/shared/game_logic/CardCombinations";
+import { PlayerKey } from "@tichu-ts/shared/game_logic/PlayerKeys";
 
 export type TableState = {
     currentCardKeys?: string[],

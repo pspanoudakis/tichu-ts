@@ -10,7 +10,7 @@ import {
     RequestCardEvent,
     RevealAllCardsEvent,
     TradeCardsEvent
-} from "@tichu-ts/shared/events/ClientEvents";
+} from "@tichu-ts/shared/schemas/events/ClientEvents";
 import {
     AllCardsRevealedEvent,
     BetPlacedEvent,
@@ -30,11 +30,11 @@ import {
     TableRoundEndedEvent,
     TableRoundStartedEvent,
     TurnPassedEvent
-} from "@tichu-ts/shared/events/ServerEvents";
+} from "@tichu-ts/shared/schemas/events/ServerEvents";
 import { EventBase } from "../GameSession";
 import { BusinessError } from "./BusinessError";
-import { UnexpectedCombinationType } from "./CardCombinations";
-import { CardInfo } from "@tichu-ts/shared/game-logic/CardInfo";
+import { UnexpectedCombinationType } from "@tichu-ts/shared/game_logic/CardCombinations";
+import { CardInfo } from "@tichu-ts/shared/game_logic/CardInfo";
 import { GameRoundState } from "./GameRoundState";
 import {
     PLAYER_KEYS,
@@ -42,24 +42,15 @@ import {
     TEAM_KEYS,
     TEAM_PLAYERS,
     zTeamKeySchema
-} from "./PlayerKeys";
+} from "@tichu-ts/shared/game_logic/PlayerKeys";
+import { GameWinnerResult } from "@tichu-ts/shared/game_logic/GameWinnerResult";
+import { RoundScore } from "@tichu-ts/shared/game_logic/RoundScore";
 
 enum GameStatus {
     INIT = 'INIT',
     IN_PROGRESS = 'IN_PROGRESS',
     OVER = 'OVER'
 }
-
-export const zRoundScore = z.object({
-    team02: z.number(),
-    team13: z.number(),
-});
-export type RoundScore = z.infer<typeof zRoundScore>;
-
-export const zGameWinnerResult = z.union([
-    zTeamKeySchema, z.literal('TIE')
-]);
-export type GameWinnerResult = z.infer<typeof zGameWinnerResult>;
 
 type PlayerEventEmitter =
     <T extends EventBase>(playerKey: PlayerKey, e: T) => void;

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PlayerKey, zPlayerKey } from "../game-logic/shared";
+import { PlayerKey, zPlayerKey } from "../../game_logic/PlayerKeys";
 
 export function createGameEventSchema<
     EventType extends z.ZodTypeAny,
