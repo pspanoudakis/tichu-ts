@@ -14,7 +14,7 @@ import {
     zGameRoundEndedEvent,
     zGameRoundStartedEvent,
     zTableRoundStartedEvent
-} from "@tichu-ts/shared/game-logic/ServerEvents";
+} from "@tichu-ts/shared/events/ServerEvents";
 import {
     eventHandlerWrapper,
     registerEventListenersHelper

@@ -8,8 +8,8 @@ import {
     zGameWinnerResult,
     zPlayerKey,
     zRoundScore
-} from "./shared";
-import { zCardKey, zNormalCardName } from "./CardConfig";
+} from "../game-logic/shared";
+import { zCardKey, zNormalCardName } from "../game-logic/CardConfig";
 
 export const ServerEventType = {
     WAITING_4_JOIN: 'WAITING_4_JOIN',

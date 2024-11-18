@@ -1,4 +1,4 @@
-import { PlaceBetEvent, TradeCardsEvent } from "@tichu-ts/shared/game-logic/ClientEvents";
+import { PlaceBetEvent, TradeCardsEvent } from "@tichu-ts/shared/events/ClientEvents";
 import { BusinessError } from "./BusinessError";
 import { SpecialCards } from "@tichu-ts/shared/game-logic/CardConfig";
 import { CardInfo } from "@tichu-ts/shared/game-logic/CardInfo";

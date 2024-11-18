@@ -20,7 +20,7 @@ import {
     zPendingDragonDecisionEvent,
     zTableRoundEndedEvent,
     zTurnPassedEvent
-} from "@tichu-ts/shared/game-logic/ServerEvents";
+} from "@tichu-ts/shared/events/ServerEvents";
 import styles from "../styles/Components.module.css";
 import { Card } from "./Card";
 import { UICardInfo } from "../game_logic/UICardInfo";

@@ -3,7 +3,7 @@ import styles from "../styles/Components.module.css";
 import { getCardConfigByKey, SpecialCards } from "@tichu-ts/shared/game-logic/CardConfig";
 import { Card } from "./Card";
 import { PlayerKey } from "@tichu-ts/shared/game-logic/shared";
-import { ClientEventType, GiveDragonEvent } from "@tichu-ts/shared/game-logic/ClientEvents";
+import { ClientEventType, GiveDragonEvent } from "@tichu-ts/shared/events/ClientEvents";
 import { dragonSelection1, dragonSelection2 } from "./styleUtils";
 import { AppContext } from "../AppContext";
 

@@ -9,7 +9,7 @@ import {
     zPlayerJoinedEvent,
     zPlayerLeftEvent,
     zWaitingForJoinEvent
-} from "@tichu-ts/shared/game-logic/ServerEvents";
+} from "@tichu-ts/shared/events/ServerEvents";
 import { Scoreboard } from "./Scoreboard";
 
 import styles from "../styles/Components.module.css";
@@ -23,7 +23,7 @@ import {
     handlePlayerLeftEvent,
     handleWaitingForJoinEvent
 } from "../AppContext";
-import { ClientEventType } from "@tichu-ts/shared/game-logic/ClientEvents";
+import { ClientEventType } from "@tichu-ts/shared/events/ClientEvents";
 import {
     errorEventListeners,
     eventHandlerWrapper,

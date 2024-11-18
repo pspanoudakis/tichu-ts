@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useMemo } from "react";
-import { ClientEventType, PlaceBetEvent } from "@tichu-ts/shared/game-logic/ClientEvents";
+import { ClientEventType, PlaceBetEvent } from "@tichu-ts/shared/events/ClientEvents";
 import { PlayerBet } from "@tichu-ts/shared/game-logic/shared";
 import { AppContext } from "../AppContext";
 

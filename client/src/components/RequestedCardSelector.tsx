@@ -3,7 +3,7 @@ import React, { useCallback, useContext } from 'react';
 import styles from "../styles/Components.module.css"
 import { NormalCardName, reversedNormalCardNames } from '@tichu-ts/shared/game-logic/CardConfig';
 import { AppContext } from '../AppContext';
-import { ClientEventType, RequestCardEvent } from '@tichu-ts/shared/game-logic/ClientEvents';
+import { ClientEventType, RequestCardEvent } from '@tichu-ts/shared/events/ClientEvents';
 
 export const RequestedCardSelector: React.FC<{}> = () => {
 

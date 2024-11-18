@@ -1,4 +1,4 @@
-import { GiveDragonEvent, PlayCardsEvent, RequestCardEvent } from "@tichu-ts/shared/game-logic/ClientEvents";
+import { GiveDragonEvent, PlayCardsEvent, RequestCardEvent } from "@tichu-ts/shared/events/ClientEvents";
 import { BusinessError } from "./BusinessError";
 import { 
     Bomb, 

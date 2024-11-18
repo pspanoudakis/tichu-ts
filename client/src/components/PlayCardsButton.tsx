@@ -1,7 +1,7 @@
 import { useCallback, useContext } from "react";
 import { AppContext } from "../AppContext";
 import { NormalCardName } from "@tichu-ts/shared/game-logic/CardConfig";
-import { ClientEventType, PlayCardsEvent } from "@tichu-ts/shared/game-logic/ClientEvents";
+import { ClientEventType, PlayCardsEvent } from "@tichu-ts/shared/events/ClientEvents";
 
 export const PlayCardsButton: React.FC<{
     cardSelections: {

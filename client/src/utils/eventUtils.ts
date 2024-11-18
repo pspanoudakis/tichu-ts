@@ -1,6 +1,6 @@
 import { Socket } from "socket.io-client";
 import { EventsMap } from "@socket.io/component-emitter";
-import { zErrorEvent } from "@tichu-ts/shared/game-logic/ServerEvents";
+import { zErrorEvent } from "@tichu-ts/shared/events/ServerEvents";
 import { ERROR_TYPES } from "@tichu-ts/shared/game-logic/shared";
 
 export function logError(msg?: any, ...optionals: any[]) {

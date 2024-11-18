@@ -14,7 +14,7 @@ import {
     ServerEventType,
     zAllCardsRevealedEvent,
     zCardsTradedEvent
-} from "@tichu-ts/shared/game-logic/ServerEvents";
+} from "@tichu-ts/shared/events/ServerEvents";
 import {
     eventHandlerWrapper,
     registerEventListenersHelper
@@ -26,7 +26,7 @@ import {
     ReceiveTradeEvent,
     RevealAllCardsEvent,
     TradeCardsEvent
-} from "@tichu-ts/shared/game-logic/ClientEvents";
+} from "@tichu-ts/shared/events/ClientEvents";
 import { TradeDecisions } from "../game_logic/TradeDecisions";
 import { PlaceBetButton } from "./PlaceBetButton";
 
