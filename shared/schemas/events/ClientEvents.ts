@@ -93,7 +93,7 @@ export type RequestCardEvent = z.infer<typeof zRequestCardEvent>;
 export const zSendMessageEvent = createGameEventSchema(
     z.literal(ClientEventType.SEND_MESSAGE),
     z.object({
-        text: z.string(),
+        text: z.string().trim().min(1),
     })
 );
 export type SendMessageEvent = z.infer<typeof zSendMessageEvent>;

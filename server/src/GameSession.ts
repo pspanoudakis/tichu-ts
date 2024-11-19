@@ -22,7 +22,8 @@ import {
     zRequestCardEvent,
     zGiveDragonEvent,
     zSendMessageEvent,
-    zJoinGameEvent
+    zJoinGameEvent,
+    JoinGameEvent
 } from "@tichu-ts/shared/schemas/events/ClientEvents";
 import { GameState } from "./game_logic/GameState";
 import {
@@ -113,7 +114,7 @@ export class GameSession {
                     );
                 }
             }).on(ClientEventType.JOIN_GAME, (event: any) => {
-                let e;
+                let e: JoinGameEvent;
                 try {
                     e = zJoinGameEvent.parse(event);
                 } catch (error) {

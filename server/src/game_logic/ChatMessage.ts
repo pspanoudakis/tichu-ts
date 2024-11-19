@@ -4,6 +4,7 @@ export class ChatMessage {
     text: string;
 
     constructor(sentBy: string, text: string) {
+        if (!text.trim()) throw new Error('Empty messages are not allowed.');
         this.sentBy = sentBy;
         this.text = text;
     }
