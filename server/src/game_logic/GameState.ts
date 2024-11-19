@@ -32,7 +32,6 @@ import {
     TurnPassedEvent
 } from "@tichu-ts/shared/schemas/events/ServerEvents";
 import { EventBase } from "../GameSession";
-import { BusinessError } from "./BusinessError";
 import { UnexpectedCombinationType } from "@tichu-ts/shared/game_logic/CardCombinations";
 import { CardInfo } from "@tichu-ts/shared/game_logic/CardInfo";
 import { GameRoundState } from "./GameRoundState";
@@ -45,6 +44,7 @@ import {
 } from "@tichu-ts/shared/game_logic/PlayerKeys";
 import { GameWinnerResult } from "@tichu-ts/shared/game_logic/GameWinnerResult";
 import { RoundScore } from "@tichu-ts/shared/game_logic/RoundScore";
+import { BusinessError } from "../utils";
 
 enum GameStatus {
     INIT = 'INIT',

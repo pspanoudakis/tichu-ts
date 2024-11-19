@@ -1,5 +1,4 @@
 import { GiveDragonEvent, PlayCardsEvent, RequestCardEvent } from "@tichu-ts/shared/schemas/events/ClientEvents";
-import { BusinessError } from "./BusinessError";
 import { 
     Bomb, 
     CardCombination, 
@@ -15,6 +14,7 @@ import { PLAYER_KEYS, PlayerKey, TEAM_KEYS, TEAM_PLAYERS } from "@tichu-ts/share
 import { PlayerState } from "./PlayerState";
 import { TableState } from "./TableState";
 import { RoundScore } from "@tichu-ts/shared/game_logic/RoundScore";
+import { BusinessError } from "../utils";
 
 class PlayerCards {
     player1 = Array<CardInfo>();

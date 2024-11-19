@@ -1,16 +1,15 @@
 import http from "http";
 import { Server } from "socket.io";
 import cors from "cors"
-import { BusinessError } from "./game_logic/BusinessError";
 import { GameSession } from "./GameSession";
 import express, { Response as ExpressResponse } from "express";
 import {
     CreateRoomRequest,
     ERROR_TYPES,
-    extractErrorInfo,
     SessionIdResponse,
     zCreateRoomRequest
-} from "./schemas/API";
+} from "@tichu-ts/shared/schemas/API";
+import { BusinessError, extractErrorInfo } from "./utils";
 
 export class GameServer {
 

@@ -37,7 +37,6 @@ export function registerEventListenersHelper<
     if (!socket) return () => {};
     for (const eventName in eventListeners) {
         const l = eventListeners[eventName];
-        //@ts-ignore
         if (l) socket.on(eventName, l);
     }
     return () => {

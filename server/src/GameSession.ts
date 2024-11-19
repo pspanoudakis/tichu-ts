@@ -31,11 +31,10 @@ import {
     ServerEventType,
     WaitingForJoinEvent
 } from "@tichu-ts/shared/schemas/events/ServerEvents";
-import { BusinessError } from "./game_logic/BusinessError";
 import { GameEvent } from "@tichu-ts/shared/schemas/events/GameEvent";
 import { ChatMessage } from "./game_logic/ChatMessage";
 import { PLAYER_KEYS, PlayerKey } from "@tichu-ts/shared/game_logic/PlayerKeys";
-import { extractErrorInfo } from "./schemas/API";
+import { BusinessError, extractErrorInfo } from "./utils";
 
 export type EventBase = GameEvent<any, any>;
 
