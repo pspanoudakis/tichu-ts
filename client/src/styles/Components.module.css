@@ -19,10 +19,9 @@ button {
 .gameContainer {
     width: 100%;
     height: 100%;
-    display: grid;    
-    row-gap: 2%;
+    display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: 10% 90%;
+    grid-template-rows: 10% 85% 5%;
 }
 
 /* Game Entry -------------------------------------------------------------- */

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { createSessionSocketURI } from "../API/coreAPI";
 import {
@@ -44,6 +44,7 @@ export const GameSession: React.FC<GameSessionProps> = ({
 
     const [appContextState, setAppContextState] = useState(appContextInitState);
     const [connectingToSession, setConnectingToSession] = useState(true);
+    const [isGameInProgress, setIsGameInProgress] = useState(false);
 
     useEffect(() => {
         setConnectingToSession(true);
@@ -95,6 +96,7 @@ export const GameSession: React.FC<GameSessionProps> = ({
             [ServerEventType.GAME_STARTED]: eventHandlerWrapper(
                 zGameStartedEvent.parse, e => {
                     setAppContextState(s => handleGameStartedEvent(s, e));
+                    setIsGameInProgress(true);
                 }                
             ),
             [ServerEventType.PLAYER_LEFT]: eventHandlerWrapper(
@@ -146,6 +148,7 @@ export const GameSession: React.FC<GameSessionProps> = ({
                 }
                 alert(`Game Over. Result: ${resultMsg}`);
                 setAppContextState(s => handleGameEndedEvent(s, e));
+                setIsGameInProgress(false);
             }                
         ),
     }, appContextState.socket), [appContextState.socket, thisPlayerTeam]);
@@ -154,7 +157,15 @@ export const GameSession: React.FC<GameSessionProps> = ({
         if (appContextState.gameContext.thisPlayer?.playerKey) {
             setConnectingToSession(false);
         }
-    }, [appContextState.gameContext.thisPlayer?.playerKey])
+    }, [appContextState.gameContext.thisPlayer?.playerKey]);
+
+    const onGameExit = useCallback(() => {
+        if (!isGameInProgress || window.confirm(
+            'Are you sure? Your team will lose if you exit the game.'
+        )) {
+            exitSession?.();
+        }        
+    }, [exitSession, isGameInProgress]);
 
     return (
         <AppContext.Provider 
@@ -181,6 +192,18 @@ export const GameSession: React.FC<GameSessionProps> = ({
                     }}
                 />
                 <GameRound/>
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'start',
+                        alignItems: "center",
+                    }}
+                >
+                    <button onClick={onGameExit}>
+                        {'⬅ Exit Game'}
+                    </button>
+                </div>
             </div>
         }</AppContext.Provider>
     );
