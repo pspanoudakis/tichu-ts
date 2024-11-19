@@ -22,7 +22,8 @@ import {
     zRequestCardEvent,
     zGiveDragonEvent,
     zSendMessageEvent,
-    zJoinGameEvent
+    zJoinGameEvent,
+    JoinGameEvent
 } from "@tichu-ts/shared/schemas/events/ClientEvents";
 import { GameState } from "./game_logic/GameState";
 import {
@@ -113,7 +114,7 @@ export class GameSession {
                     );
                 }
             }).on(ClientEventType.JOIN_GAME, (event: any) => {
-                let e;
+                let e: JoinGameEvent;
                 try {
                     e = zJoinGameEvent.parse(event);
                 } catch (error) {
@@ -167,7 +168,7 @@ export class GameSession {
                 }
             )).on(ClientEventType.SEND_MESSAGE, this.eventHandlerWrapper(
                 client, zSendMessageEvent.parse, (e: SendMessageEvent) => {
-                    const msg = new ChatMessage(playerKey, e.data.text);
+                    const msg = new ChatMessage(client.nickname, e.data.text);
                     this.chatMessages.push(msg);
                     this.emitToNamespace<MessageSentEvent>({
                         playerKey,

@@ -1,7 +1,8 @@
 import { Socket } from "socket.io-client";
 import { EventsMap } from "@socket.io/component-emitter";
-import { zErrorEvent } from "@tichu-ts/shared/schemas/events/ServerEvents";
+import { zErrorEvent, zMessageSentEvent } from "@tichu-ts/shared/schemas/events/ServerEvents";
 import { ERROR_TYPES } from "@tichu-ts/shared/schemas/API";
+import { z } from "zod";
 
 export function logError(msg?: any, ...optionals: any[]) {
     console.error(msg, ...optionals);
@@ -65,3 +66,6 @@ export const errorEventListeners: {
     [ERROR_TYPES.INTERNAL_ERROR]: errorEventListener,
     [ERROR_TYPES.VALIDATION_ERROR]: errorEventListener,
 };
+
+const zMessageData = zMessageSentEvent.pick({ data: true });
+export type MessageData = z.infer<typeof zMessageData>['data'];

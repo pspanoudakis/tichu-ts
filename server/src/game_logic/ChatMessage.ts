@@ -4,6 +4,7 @@ export class ChatMessage {
     text: string;
 
     constructor(sentBy: string, text: string) {
+        if (!text.trim()) throw new Error('Empty messages are not allowed.');
         this.sentBy = sentBy;
         this.text = text;
     }
@@ -11,7 +12,7 @@ export class ChatMessage {
     toJSON() {
         return {
             sentBy: this.sentBy,
-            sentOn: JSON.stringify(this.sentOn),
+            sentOn: this.sentOn.toISOString(),
             text: this.text,
         };
     }
