@@ -23,18 +23,18 @@ import {
     zGiveDragonEvent,
     zSendMessageEvent,
     zJoinGameEvent
-} from "@tichu-ts/shared/game-logic/ClientEvents";
+} from "@tichu-ts/shared/schemas/events/ClientEvents";
 import { GameState } from "./game_logic/GameState";
 import {
     ErrorEvent,
     MessageSentEvent,
     ServerEventType,
     WaitingForJoinEvent
-} from "@tichu-ts/shared/game-logic/ServerEvents";
+} from "@tichu-ts/shared/schemas/events/ServerEvents";
 import { BusinessError } from "./game_logic/BusinessError";
-import { GameEvent } from "@tichu-ts/shared/game-logic/GameEvent";
+import { GameEvent } from "@tichu-ts/shared/schemas/events/GameEvent";
 import { ChatMessage } from "./game_logic/ChatMessage";
-import { PLAYER_KEYS, PlayerKey } from "./game_logic/PlayerKeys";
+import { PLAYER_KEYS, PlayerKey } from "@tichu-ts/shared/game_logic/PlayerKeys";
 import { extractErrorInfo } from "./schemas/API";
 
 export type EventBase = GameEvent<any, any>;

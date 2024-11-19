@@ -9,7 +9,7 @@ import {
     zPlayerJoinedEvent,
     zPlayerLeftEvent,
     zWaitingForJoinEvent
-} from "@tichu-ts/shared/game-logic/ServerEvents";
+} from "@tichu-ts/shared/schemas/events/ServerEvents";
 import { Scoreboard } from "./Scoreboard";
 
 import styles from "../styles/Components.module.css";
@@ -23,14 +23,14 @@ import {
     handlePlayerLeftEvent,
     handleWaitingForJoinEvent
 } from "../AppContext";
-import { ClientEventType } from "@tichu-ts/shared/game-logic/ClientEvents";
+import { ClientEventType } from "@tichu-ts/shared/schemas/events/ClientEvents";
 import {
     errorEventListeners,
     eventHandlerWrapper,
     registerEventListenersHelper
 } from "../utils/eventUtils";
 import { GameRound } from "./GameRound";
-import { TEAM_PLAYERS } from "@tichu-ts/shared/game-logic/shared";
+import { TEAM_PLAYERS } from "@tichu-ts/shared/game_logic/PlayerKeys";
 
 type GameSessionProps = {
     sessionId: string,

@@ -1,4 +1,4 @@
-import { RoundScore } from "@tichu-ts/shared";
+import { RoundScore } from "@tichu-ts/shared/game_logic/RoundScore";
 import { GameRoundState } from "./GameRoundState";
 import { PlayerInfoState } from "./PlayerState";
 

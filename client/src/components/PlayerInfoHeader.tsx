@@ -1,7 +1,7 @@
-import { PlayerBet } from "@tichu-ts/shared/game-logic/shared"
 import { BetIndicator } from "./BetIndicator"
 
 import styles from "../styles/Components.module.css"
+import { PlayerBet } from "@tichu-ts/shared/game_logic/PlayerBet";
 
 export const PlayerInfoHeader: React.FC<{
     nickname?: string,

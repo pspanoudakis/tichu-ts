@@ -63,23 +63,23 @@ const App: React.FC<{}> = () => {
                     <img src={tichuLogo} alt={"Tichu Logo"} className={styles.gameLogo}/>
                     <div style={{
                         display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        columnGap: '1ch',
-                    }}>
-                        <span>Nickname:</span>
-                        <input
-                            value={nickname}
-                            onChange={e => setNickname(e.target.value)}
-                        />
-                    </div>
-                    <div style={{
-                        display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'center',
-                        alignItems: 'start',
-                        rowGap: '1ch',
+                        alignItems: 'center',
+                        rowGap: '1ch'
                     }}>
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            columnGap: '1ch',
+                        }}>
+                            <span>Nickname:</span>
+                            <input
+                                value={nickname}
+                                onChange={e => setNickname(e.target.value)}
+                            />
+                        </div>
                         <WinScoreSelector onSelected={onWinningScoreSelected}/>
                         <div style={{
                             display: 'flex',

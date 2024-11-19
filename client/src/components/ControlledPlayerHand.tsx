@@ -12,14 +12,14 @@ import {
     getNormalCardValueByName,
     NormalCardName,
     SpecialCards
-} from '@tichu-ts/shared/game-logic/CardConfig';
-import { PlayerBet } from '@tichu-ts/shared/game-logic/shared';
+} from '@tichu-ts/shared/game_logic/CardConfig';
 import { PlaceBetButton } from './PlaceBetButton';
-import { CardInfo } from '@tichu-ts/shared/game-logic/CardInfo';
+import { CardInfo } from '@tichu-ts/shared/game_logic/CardInfo';
 import { PlayCardsButton } from './PlayCardsButton';
 import { PassTurnButton } from './PassTurnButton';
 import { DropBombButton } from './DropBombButton';
 import { InGamePlayerBoxWrapper } from './InGamePlayerBoxWrapper';
+import { PlayerBet } from '@tichu-ts/shared/game_logic/PlayerBet';
 
 export const ControlledPlayerHand: React.FC<{}> = () => {
 

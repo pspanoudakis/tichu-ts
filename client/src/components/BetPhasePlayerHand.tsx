@@ -14,21 +14,21 @@ import {
     ServerEventType,
     zAllCardsRevealedEvent,
     zCardsTradedEvent
-} from "@tichu-ts/shared/game-logic/ServerEvents";
+} from "@tichu-ts/shared/schemas/events/ServerEvents";
 import {
     eventHandlerWrapper,
     registerEventListenersHelper
 } from "../utils/eventUtils";
-import { CardInfo } from "@tichu-ts/shared/game-logic/CardInfo";
-import { PlayerBet } from "@tichu-ts/shared/game-logic/shared";
+import { CardInfo } from "@tichu-ts/shared/game_logic/CardInfo";
 import {
     ClientEventType,
     ReceiveTradeEvent,
     RevealAllCardsEvent,
     TradeCardsEvent
-} from "@tichu-ts/shared/game-logic/ClientEvents";
+} from "@tichu-ts/shared/schemas/events/ClientEvents";
 import { TradeDecisions } from "../game_logic/TradeDecisions";
 import { PlaceBetButton } from "./PlaceBetButton";
+import { PlayerBet } from "@tichu-ts/shared/game_logic/PlayerBet";
 
 export const BetPhasePlayerHand: React.FC<{}> = () => {
 

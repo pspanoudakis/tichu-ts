@@ -5,7 +5,7 @@ import {
     NormalCardName,
     reversedNormalCardNames,
     zNormalCardName
-} from '@tichu-ts/shared/game-logic/CardConfig';
+} from '@tichu-ts/shared/game_logic/CardConfig';
 
 const options = [
     <option value="" key="none"></option>,

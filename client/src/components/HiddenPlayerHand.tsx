@@ -1,11 +1,11 @@
 import React, { useContext, useMemo } from 'react';
 import { Card } from './Card';
-import { PlayerKey } from '@tichu-ts/shared/game-logic/shared';
 import { AppContext } from '../AppContext';
 import { InGamePlayerBoxWrapper } from './InGamePlayerBoxWrapper';
 import { usePlayerAccessProperty } from '../hooks/usePlayerAccessProperty';
 
 import styles from "../styles/Components.module.css"
+import { PlayerKey } from '@tichu-ts/shared/game_logic/PlayerKeys';
 
 export const HiddenPlayerHand: React.FC<{
     playerKey?: PlayerKey,

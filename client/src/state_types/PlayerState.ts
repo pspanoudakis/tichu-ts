@@ -1,4 +1,5 @@
-import { PlayerBet, PlayerKey } from "@tichu-ts/shared";
+import { PlayerBet } from "@tichu-ts/shared/game_logic/PlayerBet";
+import { PlayerKey } from "@tichu-ts/shared/game_logic/PlayerKeys";
 
 export type PlayerInfoState = {
     playerKey: PlayerKey,

@@ -1,4 +1,4 @@
-import { GiveDragonEvent, PlayCardsEvent, RequestCardEvent } from "@tichu-ts/shared/game-logic/ClientEvents";
+import { GiveDragonEvent, PlayCardsEvent, RequestCardEvent } from "@tichu-ts/shared/schemas/events/ClientEvents";
 import { BusinessError } from "./BusinessError";
 import { 
     Bomb, 
@@ -7,14 +7,14 @@ import {
     createCombination, 
     SingleCard,
     UnexpectedCombinationType
-} from "./CardCombinations";
-import { NormalCardName, SpecialCards } from "@tichu-ts/shared/game-logic/CardConfig";
-import { CardInfo, PhoenixCard } from "@tichu-ts/shared/game-logic/CardInfo";
+} from "@tichu-ts/shared/game_logic/CardCombinations";
+import { NormalCardName, SpecialCards } from "@tichu-ts/shared/game_logic/CardConfig";
+import { CardInfo, PhoenixCard } from "@tichu-ts/shared/game_logic/CardInfo";
 import { Deck } from "./Deck";
-import { RoundScore } from "./GameState";
-import { PLAYER_KEYS, PlayerKey, TEAM_KEYS, TEAM_PLAYERS } from "./PlayerKeys";
+import { PLAYER_KEYS, PlayerKey, TEAM_KEYS, TEAM_PLAYERS } from "@tichu-ts/shared/game_logic/PlayerKeys";
 import { PlayerState } from "./PlayerState";
 import { TableState } from "./TableState";
+import { RoundScore } from "@tichu-ts/shared/game_logic/RoundScore";
 
 class PlayerCards {
     player1 = Array<CardInfo>();
