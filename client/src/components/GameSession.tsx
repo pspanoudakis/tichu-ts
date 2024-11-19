@@ -199,6 +199,8 @@ export const GameSession: React.FC<GameSessionProps> = ({
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         alignItems: "center",
+                        paddingLeft: '1ch',
+                        paddingRight: '1ch',
                     }}
                 >
                     <button onClick={onGameExit}>

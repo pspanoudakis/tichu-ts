@@ -51,15 +51,17 @@ const MessageTile: React.FC<{
             </span>
             <div
                 style={{
-                    borderRadius: '12px',
-                    backgroundColor: 'black',
+                    borderRadius: '1vh',
+                    backgroundColor: msg.isSentByThisUser ? '#282c34' : 'rgb(114 138 188)',
                     paddingTop: '0.5ch',
                     paddingBottom: '0.5ch',
                     paddingLeft: '0.85ch',
                     paddingRight: '0.85ch',
-                    color: "white",
+                    color: msg.isSentByThisUser ? "white" : 'black',
                     width: 'max-content',
                     maxWidth: '15ch',
+                    overflowWrap: 'break-word',
+                    minHeight: '2vh'
                 }}
             >{
                 msg.data.text
@@ -73,7 +75,9 @@ const ChatContainer: React.FC<{
     onSend?: (txt: string) => void
 }> = ({ messages, onSend }) => {
 
-    const domMsgContainer = useRef<HTMLDivElement>(null);;
+    const [text, setText] = useState('');
+
+    const domMsgContainer = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (domMsgContainer.current) {
@@ -82,17 +86,27 @@ const ChatContainer: React.FC<{
         }
     }, [messages.length]);
 
+    const onTextChange = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement>) => setText(e.target.value), []);
+
+    const onSendMessage = useCallback(() => {
+        setText(s => {
+            if (s) onSend?.(s);
+            return '';
+        });
+    }, [onSend]);
+
     return (
         <div
             style={{
                 fontSize: '1.7vh',
                 position: 'absolute',
-                backgroundColor: 'white',
-                bottom: '4ch',
-                right: '0px',
+                backgroundColor: '#becbe4',
+                bottom: '5ch',
+                right: '1ch',
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'start',
+                alignItems: 'stretch',
                 borderRadius: '10px',
                 overflow: 'hidden',
                 height: '35ch',
@@ -128,24 +142,34 @@ const ChatContainer: React.FC<{
                         justifyContent: 'end',
                         height: 'max-content',
                         padding: '1ch',
+                        rowGap: '1ch',
                     }}
                 >{
                     messages.map((m, i) => <MessageTile key={i} msg={m}/>)
                 }</div>
             </div>
-            <button
+            <div
                 style={{
-                    backgroundColor: 'rgb(80, 80, 80)',
                     display: 'flex',
-                    width: '100%',
-                    justifyContent: 'center',
-                    paddingTop: '1ch',
-                    paddingBottom: '1ch',
+                    flexDirection: 'row',
+                    justifyContent: 'stretch',
+                    padding: '0.5ch'
                 }}
-                onClick={() => onSend?.('Hello!')}
             >
-                Send Message
-            </button>
+                <input
+                    style={{
+                        width: '100%',
+                        height: '3vh'
+                    }}
+                    value={text}
+                    onChange={onTextChange}
+                />
+                <button
+                    onClick={onSendMessage}
+                >
+                    Send
+                </button>
+            </div>
         </div>
     )
 }
@@ -186,7 +210,8 @@ export const GameChatWrapper: React.FC<{}> = () => {
     return (
         <div
             style={{
-                position: "relative"
+                position: "relative",
+                display: 'contents',
             }}
         >
             <button onClick={toggleChat}>
