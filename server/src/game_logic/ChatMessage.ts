@@ -11,7 +11,7 @@ export class ChatMessage {
     toJSON() {
         return {
             sentBy: this.sentBy,
-            sentOn: JSON.stringify(this.sentOn),
+            sentOn: this.sentOn.toISOString(),
             text: this.text,
         };
     }

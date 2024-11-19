@@ -31,6 +31,7 @@ import {
 } from "../utils/eventUtils";
 import { GameRound } from "./GameRound";
 import { TEAM_PLAYERS } from "@tichu-ts/shared/game_logic/PlayerKeys";
+import { GameChatWrapper } from "./GameChatWrapper";
 
 type GameSessionProps = {
     sessionId: string,
@@ -196,13 +197,14 @@ export const GameSession: React.FC<GameSessionProps> = ({
                     style={{
                         display: 'flex',
                         flexDirection: 'row',
-                        justifyContent: 'start',
+                        justifyContent: 'space-between',
                         alignItems: "center",
                     }}
                 >
                     <button onClick={onGameExit}>
                         {'⬅ Exit Game'}
                     </button>
+                    <GameChatWrapper/>
                 </div>
             </div>
         }</AppContext.Provider>
