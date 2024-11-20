@@ -19,6 +19,8 @@ import {
     registerEventListenersHelper,
 } from "../utils/eventUtils";
 
+import styles from "../styles/Components.module.css";
+
 type MessageInfo = {
     data: MessageData,
     isSentByThisUser: boolean,
@@ -30,15 +32,12 @@ const MessageTile: React.FC<{
 
     const dateText = useMemo(() => {
         return new Date(Date.parse(msg.data.sentOn)).toLocaleTimeString();
-    }, [msg.data.sentOn])
+    }, [msg.data.sentOn]);
 
     return (
         <div
+            className={styles.messageTile}
             style={{
-                display: 'flex',
-                flexDirection: 'column',
-                color: 'black',
-                width: '100%',
                 alignItems: msg.isSentByThisUser ? 'flex-end' : 'flex-start',
             }}
         >
@@ -50,19 +49,16 @@ const MessageTile: React.FC<{
             { msg.data.sentBy } - {dateText}
             </span>
             <div
-                style={{
-                    borderRadius: '1vh',
-                    backgroundColor: msg.isSentByThisUser ? '#282c34' : 'rgb(114 138 188)',
-                    paddingTop: '0.5ch',
-                    paddingBottom: '0.5ch',
-                    paddingLeft: '0.85ch',
-                    paddingRight: '0.85ch',
-                    color: msg.isSentByThisUser ? "white" : 'black',
-                    width: 'max-content',
-                    maxWidth: '15ch',
-                    overflowWrap: 'break-word',
-                    minHeight: '2vh'
-                }}
+                className={styles.messageTileTextContainer}
+                style={
+                    msg.isSentByThisUser ? {
+                        backgroundColor: '#282c34',
+                        color: 'white'
+                    } : {
+                        backgroundColor: 'rgb(114 138 188)',
+                        color: 'black'
+                    }
+                }
             >{
                 msg.data.text
             }</div>
@@ -97,65 +93,19 @@ const ChatContainer: React.FC<{
     }, [onSend]);
 
     return (
-        <div
-            style={{
-                fontSize: '1.7vh',
-                position: 'absolute',
-                backgroundColor: '#becbe4',
-                bottom: '5ch',
-                right: '1ch',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'stretch',
-                borderRadius: '10px',
-                overflow: 'hidden',
-                height: '35ch',
-                width: 'max(20ch, 30vw)'
-            }}
-        >
-            <div
-                style={{
-                    backgroundColor: 'rgb(80, 80, 80)',
-                    display: 'flex',
-                    width: '100%',
-                    justifyContent: 'center',
-                    paddingTop: '1ch',
-                    paddingBottom: '1ch',
-                }}
-            >
+        <div className={styles.chatContainer}>
+            <div className={styles.chatHeader}>
                 Game Chat
             </div>
             <div
                 ref={domMsgContainer}
-                style={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    overflowY: 'scroll',
-                }}
+                className={styles.chatMessagesContainer}
             >
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'end',
-                        height: 'max-content',
-                        padding: '1ch',
-                        rowGap: '1ch',
-                    }}
-                >{
-                    messages.map((m, i) => <MessageTile key={i} msg={m}/>)
-                }</div>
+                <div className={styles.chatMessagesList}>
+                { messages.map((m, i) => <MessageTile key={i} msg={m}/>) }
+                </div>
             </div>
-            <div
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'stretch',
-                    padding: '0.5ch'
-                }}
-            >
+            <div className={styles.chatFooter}>
                 <input
                     style={{
                         width: '100%',
@@ -164,9 +114,7 @@ const ChatContainer: React.FC<{
                     value={text}
                     onChange={onTextChange}
                 />
-                <button
-                    onClick={onSendMessage}
-                >
+                <button onClick={onSendMessage}>
                     Send
                 </button>
             </div>
