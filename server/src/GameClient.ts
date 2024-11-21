@@ -5,6 +5,7 @@ export class GameClient {
     readonly playerKey: PlayerKey;
     private _nickname = '';
     private _hasJoinedGame = false;
+    private _hasPressedStart = false;
 
     constructor(playerKey: PlayerKey) {
         this.playerKey = playerKey;
@@ -12,6 +13,10 @@ export class GameClient {
 
     get nickname() {
         return this._nickname;
+    }
+    
+    get hasPressedStart() {
+        return this._hasPressedStart;
     }
 
     set nickname(n: string) {
@@ -24,6 +29,18 @@ export class GameClient {
                 'Nickname has already been set.'
             );
         this._nickname = n;
+    }
+    
+    set hasPressedStart(b: boolean) {
+        if (b && this.hasPressedStart)
+            throw new BusinessError(
+                'This client has already pressed start.')
+            ;
+        else if (!b && !this._hasPressedStart)
+            throw new BusinessError(
+                'This client has not pressed start.'
+            );
+        this._hasPressedStart = b;
     }
 
     get hasJoinedGame() {

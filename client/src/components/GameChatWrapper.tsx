@@ -162,7 +162,13 @@ export const GameChatWrapper: React.FC<{}> = () => {
                 display: 'contents',
             }}
         >
-            <button onClick={toggleChat}>
+            <button
+                onClick={toggleChat}
+                style={{
+                    width: '14ch',
+                    minWidth: 'max-content',
+                }}
+            >
                 {`✉ ${isChatOpen ? 'Hide Chat' : 'Show Chat'}`}
             </button>
             {

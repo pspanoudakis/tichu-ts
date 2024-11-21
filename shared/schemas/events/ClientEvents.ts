@@ -6,6 +6,7 @@ import { PlayerBet } from "../../game_logic/PlayerBet";
 
 export const ClientEventType =  {
     JOIN_GAME: 'JOIN_GAME',
+    START_GAME: 'START_GAME',
     PLAY_CARDS: 'PLAY_CARDS',
     PASS_TURN: 'PASS_TURN',
     TRADE_CARDS: 'TRADE_CARDS',
@@ -97,3 +98,8 @@ export const zSendMessageEvent = createGameEventSchema(
     })
 );
 export type SendMessageEvent = z.infer<typeof zSendMessageEvent>;
+
+export const zStartGameEvent = createGameEventSchema(
+    z.literal(ClientEventType.START_GAME)
+);
+export type StartGameEvent = z.infer<typeof zStartGameEvent>;

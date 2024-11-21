@@ -23,12 +23,15 @@ import {
     zGiveDragonEvent,
     zSendMessageEvent,
     zJoinGameEvent,
-    JoinGameEvent
+    JoinGameEvent,
+    zStartGameEvent,
+    StartGameEvent
 } from "@tichu-ts/shared/schemas/events/ClientEvents";
 import { GameState } from "./game_logic/GameState";
 import {
     ErrorEvent,
     MessageSentEvent,
+    PlayerJoinedEvent,
     ServerEventType,
     WaitingForJoinEvent
 } from "@tichu-ts/shared/schemas/events/ServerEvents";
@@ -126,11 +129,27 @@ export class GameSession {
                     return GameSession.emitError(socket, error);
                 }
                 client.nickname = e.data.playerNickname;
-                this.gameState.onPlayerJoined(
-                    playerKey, e,
-                    PLAYER_KEYS.every(k => this.clients[k]?.hasJoinedGame)
-                );
-            }).on(ClientEventType.PLACE_BET, this.eventHandlerWrapper(
+                this.emitToNamespace<PlayerJoinedEvent>({
+                    eventType: ServerEventType.PLAYER_JOINED,
+                    playerKey: playerKey,
+                    data: {
+                        playerNickname: e.data.playerNickname,
+                    }
+                });
+            }).on(ClientEventType.START_GAME, this.eventHandlerWrapper(
+                client, zStartGameEvent.parse, (e: StartGameEvent) => {
+                    if (this.gameState.isGameInProgress)
+                        throw new BusinessError('The game has already started.');
+                    client.hasPressedStart = true;
+                    const clients = Object.values(this.clients);
+                    if (clients.every(c => c?.hasPressedStart)) {
+                        this.gameState.onGameStart();
+                        for (const c of clients) {
+                            if (c) c.hasPressedStart = false;
+                        }
+                    }
+                }
+            )).on(ClientEventType.PLACE_BET, this.eventHandlerWrapper(
                 client, zPlaceBetEvent.parse, (e: PlaceBetEvent) => {
                     this.gameState.onBetPlaced(playerKey, e);
                 }
