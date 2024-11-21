@@ -23,7 +23,10 @@ import {
     handlePlayerLeftEvent,
     handleWaitingForJoinEvent
 } from "../AppContext";
-import { ClientEventType } from "@tichu-ts/shared/schemas/events/ClientEvents";
+import {
+    ClientEventType,
+    StartGameEvent,
+} from "@tichu-ts/shared/schemas/events/ClientEvents";
 import {
     errorEventListeners,
     eventHandlerWrapper,
@@ -46,6 +49,7 @@ export const GameSession: React.FC<GameSessionProps> = ({
     const [appContextState, setAppContextState] = useState(appContextInitState);
     const [connectingToSession, setConnectingToSession] = useState(true);
     const [isGameInProgress, setIsGameInProgress] = useState(false);
+    const [startGamePressed, setStartGamePressed] = useState(false);
 
     useEffect(() => {
         setConnectingToSession(true);
@@ -150,6 +154,7 @@ export const GameSession: React.FC<GameSessionProps> = ({
                 alert(`Game Over. Result: ${resultMsg}`);
                 setAppContextState(s => handleGameEndedEvent(s, e));
                 setIsGameInProgress(false);
+                setStartGamePressed(false);
             }                
         ),
     }, appContextState.socket), [appContextState.socket, thisPlayerTeam]);
@@ -165,8 +170,18 @@ export const GameSession: React.FC<GameSessionProps> = ({
             'Are you sure? Your team will lose if you exit the game.'
         )) {
             exitSession?.();
+            setStartGamePressed(false);
         }        
     }, [exitSession, isGameInProgress]);
+
+    const onStartGame = useCallback(() => {
+        const e: StartGameEvent = {
+            eventType: ClientEventType.START_GAME,
+        };
+        appContextState.socket?.emit(
+            ClientEventType.START_GAME, e, () => setStartGamePressed(true)
+        );
+    }, [appContextState.socket]);
 
     return (
         <AppContext.Provider 
@@ -206,6 +221,15 @@ export const GameSession: React.FC<GameSessionProps> = ({
                     <button onClick={onGameExit}>
                         {'⬅ Exit Game'}
                     </button>
+                    {
+                        !isGameInProgress && 
+                        <button
+                            onClick={onStartGame}
+                            disabled={startGamePressed}
+                        >
+                        ▶ Start Game
+                        </button>
+                    }
                     <GameChatWrapper/>
                 </div>
             </div>
