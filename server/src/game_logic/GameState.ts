@@ -40,7 +40,6 @@ import {
     PlayerKey,
     TEAM_KEYS,
     TEAM_PLAYERS,
-    zTeamKeySchema
 } from "@tichu-ts/shared/game_logic/PlayerKeys";
 import { GameWinnerResult } from "@tichu-ts/shared/game_logic/GameWinnerResult";
 import { RoundScore } from "@tichu-ts/shared/game_logic/RoundScore";
@@ -92,6 +91,10 @@ export class GameState {
 
     get isGameOver() {
         return this.status === GameStatus.OVER;
+    }
+
+    get isGameInProgress() {
+        return this.status === GameStatus.IN_PROGRESS;
     }
 
     private getPlayer(playerKey: PlayerKey) {
@@ -170,28 +173,21 @@ export class GameState {
                 }
             });
             this.status = GameStatus.INIT;
+        } else {
+            this.onGameRoundStarted();
         }
     }
 
-    onPlayerJoined(playerKey: PlayerKey, e: JoinGameEvent, startGame = false) {
+    onGameStart() {
         if (this.status === GameStatus.IN_PROGRESS)
             throw new BusinessError('Game already started.');
-        this.emitToAll<PlayerJoinedEvent>({
-            eventType: ServerEventType.PLAYER_JOINED,
-            playerKey: playerKey,
-            data: {
-                playerNickname: e.data.playerNickname,
-            }
-        });
-        if (startGame) {
-            this.status = GameStatus.IN_PROGRESS;
-            for (const key of PLAYER_KEYS) {
-                this.emitToPlayer<GameStartedEvent>(key, {
-                    eventType: ServerEventType.GAME_STARTED,
-                });                
-            }
-            this.onGameRoundStarted();
+        this.status = GameStatus.IN_PROGRESS;
+        for (const key of PLAYER_KEYS) {
+            this.emitToPlayer<GameStartedEvent>(key, {
+                eventType: ServerEventType.GAME_STARTED,
+            });                
         }
+        this.onGameRoundStarted();
     }    
 
     onPlayerLeft(playerKey: PlayerKey, notifyOthers = false) {
@@ -259,9 +255,6 @@ export class GameState {
                 }
             });
             this.onGamePossiblyOver();
-            if (!this.isGameOver) {
-                this.onGameRoundStarted();
-            } 
         }
     }
 
