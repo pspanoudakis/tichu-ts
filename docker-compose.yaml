@@ -5,6 +5,9 @@ services:
       dockerfile: ./server/Dockerfile
       target: base
     container_name: tichu-ts-server
+    volumes:
+      - ./server/src:/home/node/app/server/src
+      - ./shared:/home/node/app/shared
     expose:
       - '8080'
     ports:
@@ -15,6 +18,9 @@ services:
       context: ./
       dockerfile: ./client/Dockerfile
       target: base
+    volumes:
+      - ./client/src:/home/node/app/client/src
+      - ./shared:/home/node/app/shared
     container_name: tichu-ts-client
     expose:
       - '3000'
