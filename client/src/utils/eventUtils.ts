@@ -50,7 +50,7 @@ export function registerEventListenersHelper<
 const errorEventListener = eventHandlerWrapper(
     zErrorEvent.parse, e => {
         console.error(e);
-        alert(`'${e.eventType}' event received. See console for details.`);
+        alert(`Error event received. See console for details.`);
     }
 );
 

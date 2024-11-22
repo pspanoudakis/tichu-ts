@@ -1,16 +1,13 @@
 import { useCallback, useContext } from "react";
 import { AppContext } from "../AppContext";
-import { ClientEventType, DropBombEvent } from "@tichu-ts/shared/schemas/events/ClientEvents";
+import { ClientEventType } from "@tichu-ts/shared/schemas/events/ClientEvents";
 
 export const DropBombButton: React.FC<{}> = () => {
 
     const { state: ctxState } = useContext(AppContext);
 
     const onBombDropped = useCallback(() => {
-        const e: DropBombEvent = {
-            eventType: ClientEventType.DROP_BOMB,
-        };
-        ctxState.socket?.emit(ClientEventType.DROP_BOMB, e);
+        ctxState.socket?.emit(ClientEventType.DROP_BOMB, {});
     }, [ctxState.socket]);
 
     const canDropBomb =

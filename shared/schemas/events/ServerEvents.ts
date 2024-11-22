@@ -6,11 +6,9 @@ import { CardCombinationType } from "../../game_logic/CardCombinations";
 import { PlayerBet } from "../../game_logic/PlayerBet";
 import { zRoundScore } from "../../game_logic/RoundScore";
 import { zGameWinnerResult } from "../../game_logic/GameWinnerResult";
-import { ERROR_TYPES } from "../API";
 
 export const ServerEventType = {
     WAITING_4_JOIN: 'WAITING_4_JOIN',
-    ROOM_CREATED: 'ROOM_CREATED',
     PLAYER_JOINED: 'PLAYER_JOINED',
     PLAYER_LEFT: 'PLAYER_LEFT',
     ALL_CARDS_REVEALED: 'ALL_CARDS_REVEALED',
@@ -29,13 +27,10 @@ export const ServerEventType = {
     GAME_ROUND_ENDED: 'GAME_ROUND_ENDED',
     GAME_STARTED: 'GAME_STARTED',
     GAME_ENDED: 'GAME_ENDED',
-    BUSINESS_ERROR: 'BUSINESS_ERROR',
-    UNKNOWN_SERVER_ERROR: 'UNKNOWN_SERVER_ERROR',
     CLIENT_STATE_SYNC: 'CLIENT_STATE_SYNC',
 } as const;
 
 export const zWaitingForJoinEvent = createGameEventSchema(
-    z.literal(ServerEventType.WAITING_4_JOIN),
     z.object({
         presentPlayers: z.object<{
             [playerKey in PlayerKey] : z.ZodOptional<z.ZodString>
@@ -52,7 +47,6 @@ export const zWaitingForJoinEvent = createGameEventSchema(
 export type WaitingForJoinEvent = z.infer<typeof zWaitingForJoinEvent>;
 
 export const zPlayerJoinedEvent = createGameEventSchema(
-    z.literal(ServerEventType.PLAYER_JOINED),
     z.object({
         playerNickname: z.string(),
     }),
@@ -61,7 +55,6 @@ export const zPlayerJoinedEvent = createGameEventSchema(
 export type PlayerJoinedEvent = z.infer<typeof zPlayerJoinedEvent>;
 
 export const zPlayerLeftEvent = createGameEventSchema(
-    z.literal(ServerEventType.PLAYER_LEFT),
     z.object({
         gameOver: z.boolean(),
     }),
@@ -70,7 +63,6 @@ export const zPlayerLeftEvent = createGameEventSchema(
 export type PlayerLeftEvent = z.infer<typeof zPlayerLeftEvent>;
 
 export const zAllCardsRevealedEvent = createGameEventSchema(
-    z.literal(ServerEventType.ALL_CARDS_REVEALED),
     z.object({
         cards: z.array(zCardKey),
     })
@@ -78,7 +70,6 @@ export const zAllCardsRevealedEvent = createGameEventSchema(
 export type AllCardsRevealedEvent = z.infer<typeof zAllCardsRevealedEvent>;
 
 export const zCardsPlayedEvent = createGameEventSchema(
-    z.literal(ServerEventType.CARDS_PLAYED),
     z.object({
         numCardsRemainingInHand: z.number(),
         combinationType: z.nativeEnum(CardCombinationType),
@@ -91,7 +82,6 @@ export const zCardsPlayedEvent = createGameEventSchema(
 export type CardsPlayedEvent = z.infer<typeof zCardsPlayedEvent>;
 
 export const zTurnPassedEvent = createGameEventSchema(
-    z.literal(ServerEventType.TURN_PASSED),
     z.object({
         currentPlayer: zPlayerKey,
     }),
@@ -100,7 +90,6 @@ export const zTurnPassedEvent = createGameEventSchema(
 export type TurnPassedEvent = z.infer<typeof zTurnPassedEvent>;
 
 export const zCardsTradedEvent = createGameEventSchema(
-    z.literal(ServerEventType.CARDS_TRADED),
     z.object({
         cardByTeammate: zCardKey,
         cardByLeft: zCardKey,
@@ -109,14 +98,11 @@ export const zCardsTradedEvent = createGameEventSchema(
 );
 export type CardsTradedEvent = z.infer<typeof zCardsTradedEvent>;
 
-export const zPendingDragonDecisionEvent = createGameEventSchema(
-    z.literal(ServerEventType.PENDING_DRAGON_DECISION)
-);
+export const zPendingDragonDecisionEvent = createGameEventSchema();
 export type PendingDragonDecisionEvent =
     z.infer<typeof zPendingDragonDecisionEvent>;
 
 export const zDragonGivenEvent = createGameEventSchema(
-    z.literal(ServerEventType.DRAGON_GIVEN),
     z.object({
         dragonReceiverKey: zPlayerKey,
     })
@@ -124,7 +110,6 @@ export const zDragonGivenEvent = createGameEventSchema(
 export type DragonGivenEvent = z.infer<typeof zDragonGivenEvent>;
 
 export const zBetPlacedEvent = createGameEventSchema(
-    z.literal(ServerEventType.BET_PLACED),
     z.object({
         betPoints: z.union([
             z.literal(PlayerBet.TICHU),
@@ -136,14 +121,12 @@ export const zBetPlacedEvent = createGameEventSchema(
 export type BetPlacedEvent = z.infer<typeof zBetPlacedEvent>;
 
 export const zBombDroppedEvent = createGameEventSchema(
-    z.literal(ServerEventType.BOMB_DROPPED),
     z.undefined(),
     zPlayerKey,
 );
 export type BombDroppedEvent = z.infer<typeof zBombDroppedEvent>;
 
 export const zCardRequestedEvent = createGameEventSchema(
-    z.literal(ServerEventType.CARD_REQUESTED),
     z.object({
         requestedCardName: zNormalCardName,
     }),
@@ -152,7 +135,6 @@ export const zCardRequestedEvent = createGameEventSchema(
 export type CardRequestedEvent = z.infer<typeof zCardRequestedEvent>;
 
 export const zMessageSentEvent = createGameEventSchema(
-    z.literal(ServerEventType.MESSAGE_SENT),
     z.object({
         sentBy: z.string(),
         sentOn: z.string(),
@@ -163,7 +145,6 @@ export const zMessageSentEvent = createGameEventSchema(
 export type MessageSentEvent = z.infer<typeof zMessageSentEvent>;
 
 export const zTableRoundStartedEvent = createGameEventSchema(
-    z.literal(ServerEventType.TABLE_ROUND_STARTED),
     z.object({
         currentPlayer: zPlayerKey,
     })
@@ -171,7 +152,6 @@ export const zTableRoundStartedEvent = createGameEventSchema(
 export type TableRoundStartedEvent = z.infer<typeof zTableRoundStartedEvent>;
 
 export const zTableRoundEndedEvent = createGameEventSchema(
-    z.literal(ServerEventType.TABLE_ROUND_ENDED),
     z.object({
         roundWinner: zPlayerKey,
     })
@@ -179,7 +159,6 @@ export const zTableRoundEndedEvent = createGameEventSchema(
 export type TableRoundEndedEvent = z.infer<typeof zTableRoundEndedEvent>;
 
 export const zGameRoundStartedEvent = createGameEventSchema(
-    z.literal(ServerEventType.GAME_ROUND_STARTED),
     z.object({
         partialCards: z.array(zCardKey),
     })
@@ -187,22 +166,17 @@ export const zGameRoundStartedEvent = createGameEventSchema(
 export type GameRoundStartedEvent = z.infer<typeof zGameRoundStartedEvent>;
 
 export const zGameRoundEndedEvent = createGameEventSchema(
-    z.literal(ServerEventType.GAME_ROUND_ENDED),
     z.object({
         roundScore: zRoundScore,
     })
 );
 export type GameRoundEndedEvent = z.infer<typeof zGameRoundEndedEvent>;
 
-export const zGameStartedEvent = createGameEventSchema(
-    z.literal(ServerEventType.GAME_STARTED),
-    z.undefined()
-);
+export const zGameStartedEvent = createGameEventSchema(z.undefined());
 
 export type GameStartedEvent = z.infer<typeof zGameStartedEvent>;
 
 export const zGameEndedEvent = createGameEventSchema(
-    z.literal(ServerEventType.GAME_ENDED),
     z.object({
         result: zGameWinnerResult,
         team02TotalScore: z.number(),
@@ -213,7 +187,6 @@ export const zGameEndedEvent = createGameEventSchema(
 export type GameEndedEvent = z.infer<typeof zGameEndedEvent>;
 
 export const zErrorEvent = createGameEventSchema(
-    z.nativeEnum(ERROR_TYPES),
     z.object({
         message: z.string(),
     })
@@ -221,7 +194,6 @@ export const zErrorEvent = createGameEventSchema(
 export type ErrorEvent = z.infer<typeof zErrorEvent>;
 
 export const zClientStateSyncEvent = createGameEventSchema(
-    z.literal(ServerEventType.CLIENT_STATE_SYNC),
     z.object({
 
     })

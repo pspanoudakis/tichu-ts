@@ -9,7 +9,7 @@ import {
     SessionIdResponse,
     zCreateRoomRequest
 } from "@tichu-ts/shared/schemas/API";
-import { BusinessError, extractErrorInfo } from "./utils";
+import { BusinessError, extractErrorInfo } from "./utils/errors";
 
 export class GameServer {
 

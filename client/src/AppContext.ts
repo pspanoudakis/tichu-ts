@@ -23,10 +23,11 @@ import { TradeDecisions } from './game_logic/TradeDecisions';
 import { GameRoundState } from './state_types/GameRoundState';
 import { PLAYER_KEYS } from '@tichu-ts/shared/game_logic/PlayerKeys';
 import { PlayerBet } from '@tichu-ts/shared/game_logic/PlayerBet';
+import { ServerEvents, ClientEvents } from '@tichu-ts/shared/schemas/events/SocketEvents';
 
 export type AppContextState = {
     gameContext: GameState,
-    socket?: Socket,
+    socket?: Socket<ServerEvents, ClientEvents>,
 };
 
 export type AppContextStateSetter =

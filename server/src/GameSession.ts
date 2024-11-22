@@ -1,4 +1,3 @@
-import { DefaultEventsMap, Namespace, Server, Socket } from "socket.io";
 import { GameClient } from "./GameClient";
 import {
     ClientEventType,
@@ -29,46 +28,21 @@ import {
 } from "@tichu-ts/shared/schemas/events/ClientEvents";
 import { GameState } from "./game_logic/GameState";
 import {
-    ErrorEvent,
-    MessageSentEvent,
-    PlayerJoinedEvent,
     ServerEventType,
-    WaitingForJoinEvent
 } from "@tichu-ts/shared/schemas/events/ServerEvents";
 import { GameEvent } from "@tichu-ts/shared/schemas/events/GameEvent";
 import { ChatMessage } from "./game_logic/ChatMessage";
 import { PLAYER_KEYS, PlayerKey } from "@tichu-ts/shared/game_logic/PlayerKeys";
-import { BusinessError, extractErrorInfo } from "./utils";
+import { BusinessError, extractErrorInfo } from "./utils/errors";
+import { SocketIONamespace, SocketIOServer, SocketIOSocket } from "./utils/sockets";
+import { ServerEventParams, ServerEvents } from "@tichu-ts/shared/schemas/events/SocketEvents";
 
-export type EventBase = GameEvent<any, any>;
-
-interface CustomSocketData {
-    playerKey?: PlayerKey;
-};
-
-type CustomSocket = Socket<
-    DefaultEventsMap,
-    DefaultEventsMap,
-    DefaultEventsMap,
-    CustomSocketData
->;
-
-type CustomServer = Server<
-    DefaultEventsMap,
-    DefaultEventsMap,
-    DefaultEventsMap,
-    CustomSocketData
->;
+export type EventBase = GameEvent<any>;
 
 export class GameSession {
     readonly id: string;
 
-    private sessionNamespace: Namespace<
-        DefaultEventsMap,
-        DefaultEventsMap,
-        DefaultEventsMap,
-        CustomSocketData
-    >;
+    private sessionNamespace: SocketIONamespace;
     private clients: {
         [playerKey in PlayerKey]: GameClient | null;
     } = {
@@ -81,14 +55,14 @@ export class GameSession {
 
     private chatMessages = new Array<ChatMessage>();
 
-    constructor(sessionId: string, socketServer: CustomServer, winningScore: number) {
+    constructor(sessionId: string, socketServer: SocketIOServer, winningScore: number) {
         this.id = sessionId;
+        this.sessionNamespace = socketServer.of(`/${sessionId}`);
         this.gameState = new GameState(
             winningScore,
             this.emitEventByKey.bind(this),
-            this.emitToNamespace.bind(this)
+            this.sessionNamespace.emit.bind(this.sessionNamespace)
         );
-        this.sessionNamespace = socketServer.of(`/${sessionId}`);
         this.sessionNamespace.use((_, next) => {
             // Maybe add auth here?
             next();
@@ -129,8 +103,7 @@ export class GameSession {
                     return GameSession.emitError(socket, error);
                 }
                 client.nickname = e.data.playerNickname;
-                this.emitToNamespace<PlayerJoinedEvent>({
-                    eventType: ServerEventType.PLAYER_JOINED,
+                this.sessionNamespace.emit(ServerEventType.PLAYER_JOINED, {
                     playerKey: playerKey,
                     data: {
                         playerNickname: e.data.playerNickname,
@@ -189,15 +162,13 @@ export class GameSession {
                 client, zSendMessageEvent.parse, (e: SendMessageEvent) => {
                     const msg = new ChatMessage(client.nickname, e.data.text);
                     this.chatMessages.push(msg);
-                    this.emitToNamespace<MessageSentEvent>({
+                    this.sessionNamespace.emit(ServerEventType.MESSAGE_SENT, {
                         playerKey,
-                        eventType: ServerEventType.MESSAGE_SENT,
                         data: msg.toJSON(),
                     });
                 }
             ));
-            GameSession.emitEvent<WaitingForJoinEvent>(socket, {
-                eventType: ServerEventType.WAITING_4_JOIN,
+            socket.emit(ServerEventType.WAITING_4_JOIN, {
                 playerKey: playerKey,
                 data: {
                     winningScore: this.gameState.winningScore,
@@ -212,10 +183,9 @@ export class GameSession {
         });
     }
 
-    private static emitError(socket: CustomSocket, error: any) {
+    private static emitError(socket: SocketIOSocket, error: any) {
         const { errorType: eventType, message } = extractErrorInfo(error);
-        GameSession.emitEvent<ErrorEvent>(socket, {
-            eventType,
+        socket.emit(eventType, {
             data: {
                 message,
             },
@@ -228,15 +198,15 @@ export class GameSession {
         GameSession.emitError(socket, error);
     }
 
-    private eventHandlerWrapper<T extends (keyof typeof ClientEventType), D = any>(
+    private eventHandlerWrapper<T>(
         client: GameClient,
-        validator: (e: any) => GameEvent<T, D>,
-        eventHandler: (e: GameEvent<T, D>) => void,
+        validator: (e: any) => T,
+        eventHandler: (e: T) => void,
     ) {
-        return (event: any, ackFn?: () => void) => {
+        return (event?: any, ackFn?: () => void) => {
             try {
                 if (!client.hasJoinedGame)
-                    throw new BusinessError(`Unexpected Event '${event.eventType}'`);
+                    throw new BusinessError(`Client has not joined the game yet.'`);
                 eventHandler(validator(event));
                 ackFn?.();
             } catch (error) {
@@ -252,16 +222,12 @@ export class GameSession {
         }
     }
 
-    private emitToNamespace<T extends EventBase>(e: T) {
-        this.sessionNamespace.emit(e.eventType, e);
-    }
-
-    private emitEventByKey<T extends EventBase>(playerKey: PlayerKey, e: T) {
-        this.getSocketByPlayerKey(playerKey)?.emit(e.eventType, e);
-    }
-    
-    private static emitEvent<T extends EventBase>(socket: CustomSocket, e: T) {
-        socket.emit(e.eventType, e);
+    private emitEventByKey<T extends keyof ServerEvents>(
+        playerKey: PlayerKey,
+        eventType: T,
+        ...args: ServerEventParams<T>
+    ) {
+        this.getSocketByPlayerKey(playerKey)?.emit(eventType, ...args);
     }
 
     isFull() {

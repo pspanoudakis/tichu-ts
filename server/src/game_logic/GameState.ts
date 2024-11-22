@@ -1,8 +1,6 @@
-import { z } from "zod";
 import {
     DropBombEvent,
     GiveDragonEvent,
-    JoinGameEvent,
     PassTurnEvent,
     PlaceBetEvent,
     PlayCardsEvent,
@@ -11,27 +9,7 @@ import {
     RevealAllCardsEvent,
     TradeCardsEvent
 } from "@tichu-ts/shared/schemas/events/ClientEvents";
-import {
-    AllCardsRevealedEvent,
-    BetPlacedEvent,
-    BombDroppedEvent,
-    CardRequestedEvent,
-    CardsPlayedEvent,
-    CardsTradedEvent,
-    DragonGivenEvent,
-    GameEndedEvent,
-    GameRoundEndedEvent,
-    GameRoundStartedEvent,
-    GameStartedEvent,
-    PendingDragonDecisionEvent,
-    PlayerJoinedEvent,
-    PlayerLeftEvent,
-    ServerEventType,
-    TableRoundEndedEvent,
-    TableRoundStartedEvent,
-    TurnPassedEvent
-} from "@tichu-ts/shared/schemas/events/ServerEvents";
-import { EventBase } from "../GameSession";
+import { ServerEventType } from "@tichu-ts/shared/schemas/events/ServerEvents";
 import { UnexpectedCombinationType } from "@tichu-ts/shared/game_logic/CardCombinations";
 import { CardInfo } from "@tichu-ts/shared/game_logic/CardInfo";
 import { GameRoundState } from "./GameRoundState";
@@ -43,7 +21,8 @@ import {
 } from "@tichu-ts/shared/game_logic/PlayerKeys";
 import { GameWinnerResult } from "@tichu-ts/shared/game_logic/GameWinnerResult";
 import { RoundScore } from "@tichu-ts/shared/game_logic/RoundScore";
-import { BusinessError } from "../utils";
+import { BusinessError } from "../utils/errors";
+import { ServerEventParams, ServerEvents } from "@tichu-ts/shared/schemas/events/SocketEvents";
 
 enum GameStatus {
     INIT = 'INIT',
@@ -51,10 +30,15 @@ enum GameStatus {
     OVER = 'OVER'
 }
 
-type PlayerEventEmitter =
-    <T extends EventBase>(playerKey: PlayerKey, e: T) => void;
-type GlobalEventEmitter =
-    <T extends EventBase>(e: T) => void;
+type PlayerEventEmitter = <T extends keyof ServerEvents>(
+    playerKey: PlayerKey,
+    eventType: T,
+    ...args: ServerEventParams<T>
+) => void;
+type GlobalEventEmitter = <T extends keyof ServerEvents>(
+    eventType: T,
+    ...args: ServerEventParams<T>
+) => void;
 
 export class GameState {
     private _result?: GameWinnerResult;
@@ -69,8 +53,8 @@ export class GameState {
 
     constructor(
         winningScore: number = 1,
-        playerEventEmitter: <T extends EventBase>(playerKey: PlayerKey, e: T) => void,
-        globalEventEmitter: <T extends EventBase>(e: T) => void
+        playerEventEmitter: PlayerEventEmitter,
+        globalEventEmitter: GlobalEventEmitter
     ) {
         this.winningScore = winningScore;
         this.emitToPlayer = playerEventEmitter;
@@ -142,8 +126,7 @@ export class GameState {
         this._currentRound = new GameRoundState();
         for (const key of PLAYER_KEYS) {
             const player = this.currentRound.players[key];
-            this.emitToPlayer<GameRoundStartedEvent>(key, {
-                eventType: ServerEventType.GAME_ROUND_STARTED,
+            this.emitToPlayer(key, ServerEventType.GAME_ROUND_STARTED, {
                 data: {
                     partialCards:
                         GameState.mapCardsToKeys(player.getRevealedCards())
@@ -153,8 +136,7 @@ export class GameState {
     }
 
     private onTableRoundStarted() {
-        this.emitToAll<TableRoundStartedEvent>({
-            eventType: ServerEventType.TABLE_ROUND_STARTED,
+        this.emitToAll(ServerEventType.TABLE_ROUND_STARTED, {
             data: {
                 currentPlayer: this.currentRound.currentPlayerKey,
             }
@@ -163,8 +145,7 @@ export class GameState {
 
     private onGamePossiblyOver() {
         if (this.isGameOver) {
-            this.emitToAll<GameEndedEvent>({
-                eventType: ServerEventType.GAME_ENDED,
+            this.emitToAll(ServerEventType.GAME_ENDED, {
                 data: {
                     result: this.result,
                     team02TotalScore: this.team02TotalPoints,
@@ -183,9 +164,7 @@ export class GameState {
             throw new BusinessError('Game already started.');
         this.status = GameStatus.IN_PROGRESS;
         for (const key of PLAYER_KEYS) {
-            this.emitToPlayer<GameStartedEvent>(key, {
-                eventType: ServerEventType.GAME_STARTED,
-            });                
+            this.emitToPlayer(key, ServerEventType.GAME_STARTED, {});                
         }
         this.onGameRoundStarted();
     }    
@@ -215,8 +194,7 @@ export class GameState {
                 );
         }
         if (notifyOthers) {
-            this.emitToAll<PlayerLeftEvent>({
-                eventType: ServerEventType.PLAYER_LEFT,
+            this.emitToAll(ServerEventType.PLAYER_LEFT, {
                 playerKey: playerKey,
                 data: {
                     gameOver: this.isGameOver,
@@ -234,9 +212,8 @@ export class GameState {
         if (!combType) throw new UnexpectedCombinationType (
             'Unexpected Error: Table combination is null'
         );
-        this.emitToAll<CardsPlayedEvent>({
+        this.emitToAll(ServerEventType.CARDS_PLAYED, {
             playerKey: playerKey,
-            eventType: ServerEventType.CARDS_PLAYED,
             data: {
                 combinationType: combType,
                 numCardsRemainingInHand: player.getNumCards(),
@@ -248,10 +225,9 @@ export class GameState {
         });
         if (this.currentRound.mustEndGameRound()) {
             const score = this.endGameRound();
-            this.emitToAll<GameRoundEndedEvent>({
-                eventType: ServerEventType.GAME_ROUND_ENDED,
+            this.emitToAll(ServerEventType.GAME_ROUND_ENDED, {
                 data: {
-                    roundScore: score
+                    roundScore: score,
                 }
             });
             this.onGamePossiblyOver();
@@ -263,20 +239,16 @@ export class GameState {
             this.currentRound.currentTableCardsOwnerIdx;
         this.currentRound
             .passTurnOrElseThrow(this.getPlayer(playerKey));
-        this.emitToAll<TurnPassedEvent>({
+        this.emitToAll(ServerEventType.TURN_PASSED, {
             playerKey: playerKey,
-            eventType: ServerEventType.TURN_PASSED,
             data: {
                 currentPlayer: this.currentRound.currentPlayerKey,
             }
         });
         if (this.currentRound.pendingDragonToBeGiven) {
-            this.emitToAll<PendingDragonDecisionEvent>({
-                eventType: ServerEventType.PENDING_DRAGON_DECISION,
-            });
+            this.emitToAll(ServerEventType.PENDING_DRAGON_DECISION, {});
         } else if (!this.currentRound.currentTableCombination) {
-            this.emitToAll<TableRoundEndedEvent>({
-                eventType: ServerEventType.TABLE_ROUND_ENDED,
+            this.emitToAll(ServerEventType.TABLE_ROUND_ENDED, {
                 data: {
                     roundWinner: PLAYER_KEYS[cardsOwnerIdx]
                 }
@@ -287,8 +259,7 @@ export class GameState {
 
     onBetPlaced(playerKey: PlayerKey, e: PlaceBetEvent) {
         this.getPlayer(playerKey).placeBetOrElseThrow(e);
-        this.emitToAll<BetPlacedEvent>({
-            eventType: ServerEventType.BET_PLACED,
+        this.emitToAll(ServerEventType.BET_PLACED, {
             playerKey: playerKey,
             data: {
                 betPoints: e.data.betPoints
@@ -298,8 +269,7 @@ export class GameState {
 
     onAllCardsRevealed(playerKey: PlayerKey, e: RevealAllCardsEvent) {
         this.getPlayer(playerKey).revealCardsOrElseThrow();
-        this.emitToPlayer<AllCardsRevealedEvent>(playerKey, {
-            eventType: ServerEventType.ALL_CARDS_REVEALED,
+        this.emitToPlayer(playerKey, ServerEventType.ALL_CARDS_REVEALED, {
             data: {
                 cards: GameState.mapCardsToKeys(
                     this.getPlayer(playerKey).getRevealedCards()
@@ -316,8 +286,7 @@ export class GameState {
             this.currentRound.makeCardTrades();
             for (const key of PLAYER_KEYS) {
                 const player = this.currentRound.players[key];
-                this.emitToPlayer<CardsTradedEvent>(key, {
-                    eventType: ServerEventType.CARDS_TRADED,
+                this.emitToPlayer(key, ServerEventType.CARDS_TRADED, {
                     data: {
                         cardByTeammate: player.incomingTrades.teammate.key,
                         cardByLeft: player.incomingTrades.left.key,
@@ -339,17 +308,15 @@ export class GameState {
 
     onBombDropped(playerKey: PlayerKey, e: DropBombEvent) {
         this.currentRound.enablePendingBombOrElseThrow(this.getPlayer(playerKey));
-        this.emitToAll<BombDroppedEvent>({
+        this.emitToAll(ServerEventType.BOMB_DROPPED, {
             playerKey: playerKey,
-            eventType: ServerEventType.BOMB_DROPPED,
         });
     }
     
     onCardRequested(playerKey: PlayerKey, e: RequestCardEvent) {
         this.currentRound.setRequestedCardOrElseThrow(this.getPlayer(playerKey), e);
-        this.emitToAll<CardRequestedEvent>({
+        this.emitToAll(ServerEventType.CARD_REQUESTED, {
             playerKey: playerKey,
-            eventType: ServerEventType.CARD_REQUESTED,
             data: {
                 requestedCardName: e.data.requestedCardName
             },
@@ -358,8 +325,7 @@ export class GameState {
     
     onDragonGiven(playerKey: PlayerKey, e: GiveDragonEvent) {
         this.currentRound.giveDragonOrElseThrow(this.getPlayer(playerKey), e);
-        this.emitToAll<DragonGivenEvent>({
-            eventType: ServerEventType.DRAGON_GIVEN,
+        this.emitToAll(ServerEventType.DRAGON_GIVEN, {
             data: {
                 dragonReceiverKey: e.data.chosenOponentKey
             },

@@ -11,7 +11,6 @@ export const RequestedCardSelector: React.FC<{}> = () => {
 
     const onRequestedCardSelected = useCallback((cardName: NormalCardName) => {
         const e: RequestCardEvent = {
-            eventType: ClientEventType.REQUEST_CARD,
             data: {
                 requestedCardName: cardName
             }

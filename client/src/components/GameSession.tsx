@@ -23,10 +23,7 @@ import {
     handlePlayerLeftEvent,
     handleWaitingForJoinEvent
 } from "../AppContext";
-import {
-    ClientEventType,
-    StartGameEvent,
-} from "@tichu-ts/shared/schemas/events/ClientEvents";
+import { ClientEventType } from "@tichu-ts/shared/schemas/events/ClientEvents";
 import {
     errorEventListeners,
     eventHandlerWrapper,
@@ -175,11 +172,8 @@ export const GameSession: React.FC<GameSessionProps> = ({
     }, [exitSession, isGameInProgress]);
 
     const onStartGame = useCallback(() => {
-        const e: StartGameEvent = {
-            eventType: ClientEventType.START_GAME,
-        };
         appContextState.socket?.emit(
-            ClientEventType.START_GAME, e, () => setStartGamePressed(true)
+            ClientEventType.START_GAME, {}, () => setStartGamePressed(true)
         );
     }, [appContextState.socket]);
 
