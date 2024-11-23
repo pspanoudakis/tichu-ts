@@ -7,7 +7,7 @@ export const PassTurnButton: React.FC<{}> = () => {
     const { state: ctxState } = useContext(AppContext);
 
     const onTurnPassed = useCallback(() => {
-        ctxState.socket?.emit(ClientEventType.PASS_TURN, {});
+        ctxState.socket?.emit(ClientEventType.PASS_TURN);
     }, [ctxState.socket]);
 
     const canPass = (

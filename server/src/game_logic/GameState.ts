@@ -1,12 +1,8 @@
 import {
-    DropBombEvent,
     GiveDragonEvent,
-    PassTurnEvent,
     PlaceBetEvent,
     PlayCardsEvent,
-    ReceiveTradeEvent,
     RequestCardEvent,
-    RevealAllCardsEvent,
     TradeCardsEvent
 } from "@tichu-ts/shared/schemas/events/ClientEvents";
 import { ServerEventType } from "@tichu-ts/shared/schemas/events/ServerEvents";
@@ -164,7 +160,7 @@ export class GameState {
             throw new BusinessError('Game already started.');
         this.status = GameStatus.IN_PROGRESS;
         for (const key of PLAYER_KEYS) {
-            this.emitToPlayer(key, ServerEventType.GAME_STARTED, {});                
+            this.emitToPlayer(key, ServerEventType.GAME_STARTED);                
         }
         this.onGameRoundStarted();
     }    
@@ -234,7 +230,7 @@ export class GameState {
         }
     }
 
-    onTurnPassed(playerKey: PlayerKey, e: PassTurnEvent) {
+    onTurnPassed(playerKey: PlayerKey) {
         const cardsOwnerIdx =
             this.currentRound.currentTableCardsOwnerIdx;
         this.currentRound
@@ -246,7 +242,7 @@ export class GameState {
             }
         });
         if (this.currentRound.pendingDragonToBeGiven) {
-            this.emitToAll(ServerEventType.PENDING_DRAGON_DECISION, {});
+            this.emitToAll(ServerEventType.PENDING_DRAGON_DECISION);
         } else if (!this.currentRound.currentTableCombination) {
             this.emitToAll(ServerEventType.TABLE_ROUND_ENDED, {
                 data: {
@@ -267,7 +263,7 @@ export class GameState {
         });
     }
 
-    onAllCardsRevealed(playerKey: PlayerKey, e: RevealAllCardsEvent) {
+    onAllCardsRevealed(playerKey: PlayerKey) {
         this.getPlayer(playerKey).revealCardsOrElseThrow();
         this.emitToPlayer(playerKey, ServerEventType.ALL_CARDS_REVEALED, {
             data: {
@@ -297,7 +293,7 @@ export class GameState {
         }
     }
 
-    onTradesReceived(playerKey: PlayerKey, e: ReceiveTradeEvent) {
+    onTradesReceived(playerKey: PlayerKey) {
         this.currentRound.onPlayerTradesReceived(playerKey);
         if (PLAYER_KEYS.every(
             k => this.currentRound.players[k].hasReceivedTrades
@@ -306,7 +302,7 @@ export class GameState {
         }
     }
 
-    onBombDropped(playerKey: PlayerKey, e: DropBombEvent) {
+    onBombDropped(playerKey: PlayerKey) {
         this.currentRound.enablePendingBombOrElseThrow(this.getPlayer(playerKey));
         this.emitToAll(ServerEventType.BOMB_DROPPED, {
             playerKey: playerKey,

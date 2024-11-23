@@ -3,25 +3,29 @@ import { EventsMap } from "@socket.io/component-emitter";
 import { zErrorEvent, zMessageSentEvent } from "@tichu-ts/shared/schemas/events/ServerEvents";
 import { ERROR_TYPES } from "@tichu-ts/shared/schemas/API";
 import { z } from "zod";
+import { ServerEventParams, ServerEvents } from "@tichu-ts/shared/schemas/events/SocketEvents";
 
 export function logError(msg?: any, ...optionals: any[]) {
     console.error(msg, ...optionals);
     alert(`${msg}. See console.`);
 }
 
-export function eventHandlerWrapper<EventType>(
-    validator: (e: any) => EventType,
-    eventHandler: (e: EventType) => void,
+export function eventHandlerWrapper<
+    EventType extends keyof ServerEvents,
+    EventParams extends ServerEventParams<EventType>
+>(
+    validator: (e: EventParams[0]) => EventParams[0],
+    eventHandler: (...e: EventParams) => void,
 ) {
-    return (event: any) => {
+    return (...args: EventParams) => {
         let e;
         try {
-            e = validator(event);
+            e = validator(args[0]);
         } catch (error) {
             return logError('Validation Error', error);
         }
         try {
-            eventHandler(e);
+            eventHandler(...args);
         } catch (error) {
             return logError('Error in event handler', error);
         }
@@ -55,7 +59,7 @@ const errorEventListener = eventHandlerWrapper(
 );
 
 export const errorEventListeners: {
-    [et in keyof typeof ERROR_TYPES]: typeof errorEventListener
+    [et in keyof typeof ERROR_TYPES]: ServerEvents[et]
 } = {
     [ERROR_TYPES.BUSINESS_ERROR]: eventHandlerWrapper(
         zErrorEvent.parse, e => {

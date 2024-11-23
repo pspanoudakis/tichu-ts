@@ -16,7 +16,6 @@ import {
     zCardRequestedEvent,
     zCardsPlayedEvent,
     zDragonGivenEvent,
-    zPendingDragonDecisionEvent,
     zTableRoundEndedEvent,
     zTurnPassedEvent
 } from "@tichu-ts/shared/schemas/events/ServerEvents";
@@ -26,7 +25,7 @@ import { UICardInfo } from "../game_logic/UICardInfo";
 import { DragonSelectionContainer } from "./DragonSelectionContainer";
 import { usePlayerAccessProperty } from "../hooks/usePlayerAccessProperty";
 import { getCardConfigByKey } from "@tichu-ts/shared/game_logic/CardConfig";
-import { ServerEventParams, ServerEvents } from "@tichu-ts/shared/schemas/events/SocketEvents";
+import { noValidator, ServerEventParams, ServerEvents } from "@tichu-ts/shared/schemas/events/SocketEvents";
 
 type LastActionInfo<T extends keyof ServerEvents> = {
     type: T,
@@ -72,8 +71,7 @@ export const Table: React.FC<{}> = () => {
             e => handleCardRequestedEvent(e, setCtxState)
         ),
         [ServerEventType.PENDING_DRAGON_DECISION]: eventHandlerWrapper(
-            zPendingDragonDecisionEvent.parse,
-            e => handlePendingDragonDecisionEvent(e, setCtxState)
+            noValidator, () => handlePendingDragonDecisionEvent(setCtxState)
         ),
         [ServerEventType.DRAGON_GIVEN]: eventHandlerWrapper(
             zDragonGivenEvent.parse, e => setLastAction({
@@ -95,7 +93,7 @@ export const Table: React.FC<{}> = () => {
 
     const currentRoundState = gc.currentRoundState;
 
-    const lastActionPlayerProperty = usePlayerAccessProperty(lastAction?.event.playerKey);
+    const lastActionPlayerProperty = usePlayerAccessProperty(lastAction?.event?.playerKey);
     const dragonCollectorProperty = usePlayerAccessProperty(
         (checkLastActionType(ServerEventType.DRAGON_GIVEN, lastAction)) ?
         lastAction.event.data.dragonReceiverKey : undefined

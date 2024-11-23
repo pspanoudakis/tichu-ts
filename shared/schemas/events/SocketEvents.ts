@@ -1,17 +1,12 @@
 import { ERROR_TYPES } from "../API";
 import {
     ClientEventType,
-    DropBombEvent,
     GiveDragonEvent,
     JoinGameEvent,
-    PassTurnEvent,
     PlaceBetEvent,
     PlayCardsEvent,
-    ReceiveTradeEvent,
     RequestCardEvent,
-    RevealAllCardsEvent,
     SendMessageEvent,
-    StartGameEvent,
     TradeCardsEvent
 } from "./ClientEvents";
 import {
@@ -27,9 +22,7 @@ import {
     GameEndedEvent,
     GameRoundEndedEvent,
     GameRoundStartedEvent,
-    GameStartedEvent,
     MessageSentEvent,
-    PendingDragonDecisionEvent,
     PlayerJoinedEvent,
     PlayerLeftEvent,
     ServerEventType,
@@ -40,49 +33,57 @@ import {
 } from "./ServerEvents";
 
 type NoDataEmitter = () => void;
-type SimpleEmitter<T> = (eventData: T) => void;
+type NoDataEmitterWithAck = (ackFn: () => void) => void;
+type Emitter<T> = (eventData: T) => void;
 type EmitterWithAck<T> = (eventData: T, ackFn: () => void) => void;
 
 export type ClientEvents = {
-    [ClientEventType.DROP_BOMB]: SimpleEmitter<DropBombEvent>,
-    [ClientEventType.GIVE_DRAGON]: SimpleEmitter<GiveDragonEvent>,
-    [ClientEventType.JOIN_GAME]: SimpleEmitter<JoinGameEvent>,
-    [ClientEventType.PASS_TURN]: SimpleEmitter<PassTurnEvent>,
-    [ClientEventType.PLACE_BET]: SimpleEmitter<PlaceBetEvent>,
-    [ClientEventType.PLAY_CARDS]: SimpleEmitter<PlayCardsEvent>,
-    [ClientEventType.RECEIVE_TRADE]: EmitterWithAck<ReceiveTradeEvent>,
-    [ClientEventType.REQUEST_CARD]: SimpleEmitter<RequestCardEvent>,
-    [ClientEventType.REVEAL_ALL_CARDS]: SimpleEmitter<RevealAllCardsEvent>,
-    [ClientEventType.SEND_MESSAGE]: SimpleEmitter<SendMessageEvent>,
-    [ClientEventType.START_GAME]: EmitterWithAck<StartGameEvent>,
+    [ClientEventType.DROP_BOMB]: NoDataEmitter,
+    [ClientEventType.GIVE_DRAGON]: Emitter<GiveDragonEvent>,
+    [ClientEventType.JOIN_GAME]: Emitter<JoinGameEvent>,
+    [ClientEventType.PASS_TURN]: NoDataEmitter,
+    [ClientEventType.PLACE_BET]: Emitter<PlaceBetEvent>,
+    [ClientEventType.PLAY_CARDS]: Emitter<PlayCardsEvent>,
+    [ClientEventType.RECEIVE_TRADE]: NoDataEmitterWithAck,
+    [ClientEventType.REQUEST_CARD]: Emitter<RequestCardEvent>,
+    [ClientEventType.REVEAL_ALL_CARDS]: NoDataEmitter,
+    [ClientEventType.SEND_MESSAGE]: Emitter<SendMessageEvent>,
+    [ClientEventType.START_GAME]: NoDataEmitterWithAck,
     [ClientEventType.TRADE_CARDS]: EmitterWithAck<TradeCardsEvent>,
 };
 
 export type ServerEvents = {
-    [ERROR_TYPES.INTERNAL_ERROR]: SimpleEmitter<ErrorEvent>;
-    [ERROR_TYPES.VALIDATION_ERROR]: SimpleEmitter<ErrorEvent>;
-    [ERROR_TYPES.BUSINESS_ERROR]: SimpleEmitter<ErrorEvent>;
-    [ServerEventType.ALL_CARDS_REVEALED]: SimpleEmitter<AllCardsRevealedEvent>;
-    [ServerEventType.BET_PLACED]: SimpleEmitter<BetPlacedEvent>;
-    [ServerEventType.BOMB_DROPPED]: SimpleEmitter<BombDroppedEvent>;
-    [ServerEventType.CARDS_PLAYED]: SimpleEmitter<CardsPlayedEvent>;
-    [ServerEventType.CARDS_TRADED]: SimpleEmitter<CardsTradedEvent>;
-    [ServerEventType.CARD_REQUESTED]: SimpleEmitter<CardRequestedEvent>;
-    [ServerEventType.CLIENT_STATE_SYNC]: SimpleEmitter<ClientStateSyncEvent>;
-    [ServerEventType.DRAGON_GIVEN]: SimpleEmitter<DragonGivenEvent>;
-    [ServerEventType.GAME_ENDED]: SimpleEmitter<GameEndedEvent>;
-    [ServerEventType.GAME_ROUND_ENDED]: SimpleEmitter<GameRoundEndedEvent>;
-    [ServerEventType.GAME_ROUND_STARTED]: SimpleEmitter<GameRoundStartedEvent>;
-    [ServerEventType.GAME_STARTED]: SimpleEmitter<GameStartedEvent>;
-    [ServerEventType.MESSAGE_SENT]: SimpleEmitter<MessageSentEvent>;
-    [ServerEventType.PENDING_DRAGON_DECISION]: SimpleEmitter<PendingDragonDecisionEvent>;
-    [ServerEventType.PLAYER_JOINED]: SimpleEmitter<PlayerJoinedEvent>;
-    [ServerEventType.PLAYER_LEFT]: SimpleEmitter<PlayerLeftEvent>;
-    [ServerEventType.TABLE_ROUND_ENDED]: SimpleEmitter<TableRoundEndedEvent>;
-    [ServerEventType.TABLE_ROUND_STARTED]: SimpleEmitter<TableRoundStartedEvent>;
-    [ServerEventType.TURN_PASSED]: SimpleEmitter<TurnPassedEvent>;
-    [ServerEventType.WAITING_4_JOIN]: SimpleEmitter<WaitingForJoinEvent>;
+    connect: NoDataEmitter;
+    disconnect: (reason: any, description?: any) => void;
+    [ERROR_TYPES.INTERNAL_ERROR]: Emitter<ErrorEvent>;
+    [ERROR_TYPES.VALIDATION_ERROR]: Emitter<ErrorEvent>;
+    [ERROR_TYPES.BUSINESS_ERROR]: Emitter<ErrorEvent>;
+    [ServerEventType.ALL_CARDS_REVEALED]: Emitter<AllCardsRevealedEvent>;
+    [ServerEventType.BET_PLACED]: Emitter<BetPlacedEvent>;
+    [ServerEventType.BOMB_DROPPED]: Emitter<BombDroppedEvent>;
+    [ServerEventType.CARDS_PLAYED]: Emitter<CardsPlayedEvent>;
+    [ServerEventType.CARDS_TRADED]: Emitter<CardsTradedEvent>;
+    [ServerEventType.CARD_REQUESTED]: Emitter<CardRequestedEvent>;
+    [ServerEventType.CLIENT_STATE_SYNC]: Emitter<ClientStateSyncEvent>;
+    [ServerEventType.DRAGON_GIVEN]: Emitter<DragonGivenEvent>;
+    [ServerEventType.GAME_ENDED]: Emitter<GameEndedEvent>;
+    [ServerEventType.GAME_ROUND_ENDED]: Emitter<GameRoundEndedEvent>;
+    [ServerEventType.GAME_ROUND_STARTED]: Emitter<GameRoundStartedEvent>;
+    [ServerEventType.GAME_STARTED]: NoDataEmitter;
+    [ServerEventType.MESSAGE_SENT]: Emitter<MessageSentEvent>;
+    [ServerEventType.PENDING_DRAGON_DECISION]: NoDataEmitter;
+    [ServerEventType.PLAYER_JOINED]: Emitter<PlayerJoinedEvent>;
+    [ServerEventType.PLAYER_LEFT]: Emitter<PlayerLeftEvent>;
+    [ServerEventType.TABLE_ROUND_ENDED]: Emitter<TableRoundEndedEvent>;
+    [ServerEventType.TABLE_ROUND_STARTED]: Emitter<TableRoundStartedEvent>;
+    [ServerEventType.TURN_PASSED]: Emitter<TurnPassedEvent>;
+    [ServerEventType.WAITING_4_JOIN]: Emitter<WaitingForJoinEvent>;
 };
 
 export type ServerEventParams<Ev extends keyof ServerEvents> =
     Parameters<ServerEvents[Ev]>;
+
+export type ClientEventParams<Ev extends keyof ClientEvents> =
+    Parameters<ClientEvents[Ev]>;
+
+export const noValidator = <T>(arg: T) => arg;

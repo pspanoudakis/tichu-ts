@@ -7,7 +7,7 @@ export const DropBombButton: React.FC<{}> = () => {
     const { state: ctxState } = useContext(AppContext);
 
     const onBombDropped = useCallback(() => {
-        ctxState.socket?.emit(ClientEventType.DROP_BOMB, {});
+        ctxState.socket?.emit(ClientEventType.DROP_BOMB);
     }, [ctxState.socket]);
 
     const canDropBomb =

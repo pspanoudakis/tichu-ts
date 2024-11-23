@@ -5,7 +5,6 @@ import {
     ServerEventType,
     zBetPlacedEvent,
     zGameEndedEvent,
-    zGameStartedEvent,
     zPlayerJoinedEvent,
     zPlayerLeftEvent,
     zWaitingForJoinEvent
@@ -32,6 +31,7 @@ import {
 import { GameRound } from "./GameRound";
 import { TEAM_PLAYERS } from "@tichu-ts/shared/game_logic/PlayerKeys";
 import { GameChatWrapper } from "./GameChatWrapper";
+import { noValidator } from "@tichu-ts/shared/schemas/events/SocketEvents";
 
 type GameSessionProps = {
     sessionId: string,
@@ -79,8 +79,7 @@ export const GameSession: React.FC<GameSessionProps> = ({
                         ClientEventType.JOIN_GAME, {
                             data: {
                                 playerNickname: playerNickname,
-                            },
-                            eventType: ClientEventType.JOIN_GAME,
+                            }
                         }
                     );
                 }
@@ -96,8 +95,8 @@ export const GameSession: React.FC<GameSessionProps> = ({
                 }
             ),
             [ServerEventType.GAME_STARTED]: eventHandlerWrapper(
-                zGameStartedEvent.parse, e => {
-                    setAppContextState(s => handleGameStartedEvent(s, e));
+                noValidator, () => {
+                    setAppContextState(s => handleGameStartedEvent(s));
                     setIsGameInProgress(true);
                 }                
             ),
@@ -173,7 +172,7 @@ export const GameSession: React.FC<GameSessionProps> = ({
 
     const onStartGame = useCallback(() => {
         appContextState.socket?.emit(
-            ClientEventType.START_GAME, {}, () => setStartGamePressed(true)
+            ClientEventType.START_GAME, () => setStartGamePressed(true)
         );
     }, [appContextState.socket]);
 

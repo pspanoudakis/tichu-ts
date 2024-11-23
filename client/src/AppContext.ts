@@ -11,8 +11,6 @@ import {
     GameEndedEvent,
     GameRoundEndedEvent,
     GameRoundStartedEvent,
-    GameStartedEvent,
-    PendingDragonDecisionEvent,
     PlayerJoinedEvent,
     PlayerLeftEvent,
     TableRoundStartedEvent,
@@ -472,7 +470,6 @@ export function handleCardRequestedEvent(
 }
 
 export function handlePendingDragonDecisionEvent(
-    _: PendingDragonDecisionEvent,
     setCtxState?: AppContextStateSetter,
 ) {
     setCtxState?.(s => {
@@ -553,9 +550,7 @@ export function handlePlayerLeftEvent(
     };
 }
 
-export function handleGameStartedEvent(
-    s: AppContextState, _: GameStartedEvent
-): AppContextState {
+export function handleGameStartedEvent(s: AppContextState): AppContextState {
     return {
         ...s,
         gameContext: {

@@ -1,30 +1,13 @@
 import { GameClient } from "./GameClient";
 import {
     ClientEventType,
-    PlaceBetEvent,
-    RevealAllCardsEvent,
-    TradeCardsEvent,
-    ReceiveTradeEvent,
-    PlayCardsEvent,
-    PassTurnEvent,
-    DropBombEvent,
-    RequestCardEvent,
-    GiveDragonEvent,
-    SendMessageEvent,
-    zDropBombEvent,
     zPlaceBetEvent,
-    zRevealAllCardsEvent,
     zTradeCardsEvent,
-    zReceiveTradeEvent,
-    zPlayCardsEvent,
-    zPassTurnEvent,
     zRequestCardEvent,
     zGiveDragonEvent,
     zSendMessageEvent,
     zJoinGameEvent,
-    JoinGameEvent,
-    zStartGameEvent,
-    StartGameEvent
+    zPlayCardsEvent,
 } from "@tichu-ts/shared/schemas/events/ClientEvents";
 import { GameState } from "./game_logic/GameState";
 import {
@@ -35,7 +18,13 @@ import { ChatMessage } from "./game_logic/ChatMessage";
 import { PLAYER_KEYS, PlayerKey } from "@tichu-ts/shared/game_logic/PlayerKeys";
 import { BusinessError, extractErrorInfo } from "./utils/errors";
 import { SocketIONamespace, SocketIOServer, SocketIOSocket } from "./utils/sockets";
-import { ServerEventParams, ServerEvents } from "@tichu-ts/shared/schemas/events/SocketEvents";
+import {
+    ClientEventParams,
+    ClientEvents,
+    noValidator,
+    ServerEventParams,
+    ServerEvents
+} from "@tichu-ts/shared/schemas/events/SocketEvents";
 
 export type EventBase = GameEvent<any>;
 
@@ -90,10 +79,9 @@ export class GameSession {
                         `Error during client disconnection: ${error?.toString()}`
                     );
                 }
-            }).on(ClientEventType.JOIN_GAME, (event: any) => {
-                let e: JoinGameEvent;
+            }).on(ClientEventType.JOIN_GAME, e => {
                 try {
-                    e = zJoinGameEvent.parse(event);
+                    e = zJoinGameEvent.parse(e);
                 } catch (error) {
                     return GameSession.emitError(socket, error);
                 }
@@ -110,7 +98,7 @@ export class GameSession {
                     }
                 });
             }).on(ClientEventType.START_GAME, this.eventHandlerWrapper(
-                client, zStartGameEvent.parse, (e: StartGameEvent) => {
+                client, noValidator, () => {
                     if (this.gameState.isGameInProgress)
                         throw new BusinessError('The game has already started.');
                     client.hasPressedStart = true;
@@ -123,43 +111,35 @@ export class GameSession {
                     }
                 }
             )).on(ClientEventType.PLACE_BET, this.eventHandlerWrapper(
-                client, zPlaceBetEvent.parse, (e: PlaceBetEvent) => {
-                    this.gameState.onBetPlaced(playerKey, e);
-                }
+                client, zPlaceBetEvent.parse,
+                e => this.gameState.onBetPlaced(playerKey, e)
             )).on(ClientEventType.REVEAL_ALL_CARDS, this.eventHandlerWrapper(
-                client, zRevealAllCardsEvent.parse, (e: RevealAllCardsEvent) => {
-                    this.gameState.onAllCardsRevealed(playerKey, e);
-                }
+                client, noValidator,
+                () => this.gameState.onAllCardsRevealed(playerKey)
             )).on(ClientEventType.TRADE_CARDS, this.eventHandlerWrapper(
-                client, zTradeCardsEvent.parse, (e: TradeCardsEvent) => {
-                    this.gameState.onCardsTraded(playerKey, e);
-                }
+                client, zTradeCardsEvent.parse,
+                e => this.gameState.onCardsTraded(playerKey, e)
             )).on(ClientEventType.RECEIVE_TRADE, this.eventHandlerWrapper(
-                client, zReceiveTradeEvent.parse, (e: ReceiveTradeEvent) => {
-                    this.gameState.onTradesReceived(playerKey, e);
-                }
+                client, noValidator,
+                () => this.gameState.onTradesReceived(playerKey)
             )).on(ClientEventType.PLAY_CARDS, this.eventHandlerWrapper(
-                client, zPlayCardsEvent.parse, (e: PlayCardsEvent) => {
-                    this.gameState.onCardsPlayed(playerKey, e);
-                }
+                client, zPlayCardsEvent.parse,
+                e => this.gameState.onCardsPlayed(playerKey, e)
             )).on(ClientEventType.PASS_TURN, this.eventHandlerWrapper(
-                client, zPassTurnEvent.parse, (e: PassTurnEvent) => {
-                    this.gameState.onTurnPassed(playerKey, e);
-                }
+                client, noValidator,
+                () => this.gameState.onTurnPassed(playerKey)
             )).on(ClientEventType.DROP_BOMB, this.eventHandlerWrapper(
-                client, zDropBombEvent.parse, (e: DropBombEvent) => {
-                    this.gameState.onBombDropped(playerKey, e);
-                }
+                client, noValidator,
+                () => this.gameState.onBombDropped(playerKey)
             )).on(ClientEventType.REQUEST_CARD, this.eventHandlerWrapper(
-                client, zRequestCardEvent.parse, (e: RequestCardEvent) => {
-                    this.gameState.onCardRequested(playerKey, e);
-                }
+                client, zRequestCardEvent.parse,
+                e => this.gameState.onCardRequested(playerKey, e)
             )).on(ClientEventType.GIVE_DRAGON, this.eventHandlerWrapper(
-                client, zGiveDragonEvent.parse, (e: GiveDragonEvent) => {
-                    this.gameState.onDragonGiven(playerKey, e);
-                }
+                client, zGiveDragonEvent.parse,
+                e => this.gameState.onDragonGiven(playerKey, e)
             )).on(ClientEventType.SEND_MESSAGE, this.eventHandlerWrapper(
-                client, zSendMessageEvent.parse, (e: SendMessageEvent) => {
+                client, zSendMessageEvent.parse,
+                e => {
                     const msg = new ChatMessage(client.nickname, e.data.text);
                     this.chatMessages.push(msg);
                     this.sessionNamespace.emit(ServerEventType.MESSAGE_SENT, {
@@ -198,17 +178,22 @@ export class GameSession {
         GameSession.emitError(socket, error);
     }
 
-    private eventHandlerWrapper<T>(
+    private eventHandlerWrapper<
+        T extends keyof ClientEvents,
+        EventParams extends ClientEventParams<T>
+    >(
         client: GameClient,
-        validator: (e: any) => T,
-        eventHandler: (e: T) => void,
+        validator: (arg: EventParams[0]) => EventParams[0],
+        eventHandler: EventParams[0] extends Function ? () => void :
+            (e: EventParams[0]) => void
     ) {
-        return (event?: any, ackFn?: () => void) => {
+        return (...args: EventParams) => {
             try {
                 if (!client.hasJoinedGame)
                     throw new BusinessError(`Client has not joined the game yet.'`);
-                eventHandler(validator(event));
-                ackFn?.();
+                eventHandler(validator(args[0]));
+                if (typeof args[0] === 'function') args[0]();
+                else if (typeof args[1] === 'function') args[1]();
             } catch (error) {
                 this.emitErrorByKey(client.playerKey, error);
             }

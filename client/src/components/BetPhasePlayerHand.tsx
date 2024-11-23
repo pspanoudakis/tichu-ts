@@ -86,7 +86,7 @@ export const BetPhasePlayerHand: React.FC<{}> = () => {
     ]);
 
     const onCardsExpanded = useCallback(() => {
-        ctxState.socket?.emit(ClientEventType.REVEAL_ALL_CARDS, {});
+        ctxState.socket?.emit(ClientEventType.REVEAL_ALL_CARDS);
     }, [ctxState.socket]);
 
     const onTradesFinalized = useCallback(() => {
@@ -117,7 +117,7 @@ export const BetPhasePlayerHand: React.FC<{}> = () => {
 
     const onTradesReceived = useCallback(() => {
         ctxState.socket?.emit(
-            ClientEventType.RECEIVE_TRADE, {}, () => setTradesReceived(true)
+            ClientEventType.RECEIVE_TRADE, () => setTradesReceived(true)
         );
     }, [ctxState.socket]);
 

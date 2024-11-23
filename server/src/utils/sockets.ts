@@ -1,6 +1,6 @@
 import { PlayerKey } from "@tichu-ts/shared/game_logic/PlayerKeys"
 import { DefaultEventsMap, Namespace, Server, Socket } from "socket.io"
-import { ClientEvents, ServerEvents } from "@tichu-ts/shared/schemas/events/SocketEvents"
+import { ClientEventParams, ClientEvents, ServerEvents } from "@tichu-ts/shared/schemas/events/SocketEvents"
 
 type SocketData = {
     playerKey: PlayerKey,
@@ -26,3 +26,6 @@ export type SocketIOSocket = Socket<
     DefaultEventsMap,
     SocketData
 >;
+
+export type ClientEventData<T extends keyof ClientEvents>
+    = ClientEventParams<T>[0];
