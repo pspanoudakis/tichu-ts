@@ -23,6 +23,8 @@ import { TradeDecisions } from './game_logic/TradeDecisions';
 import { GameRoundState } from './state_types/GameRoundState';
 import { PLAYER_KEYS } from '@tichu-ts/shared/game_logic/PlayerKeys';
 import { PlayerBet } from '@tichu-ts/shared/game_logic/PlayerBet';
+import { CardCombination, createCombination } from '@tichu-ts/shared';
+import { UICardInfo } from './game_logic/UICardInfo';
 
 export type AppContextState = {
     gameContext: GameState,
@@ -74,8 +76,14 @@ function assertExpression<T>(x: Nullable<T>, msg: string): asserts x {
     }
 }
 
-function assertCurrentRoundNonNullable(r: Nullable<GameRoundState>): asserts r is GameRoundState {
+function assertCurrentRoundNonNullable(r: Nullable<GameRoundState>)
+: asserts r is GameRoundState {
     assertExpression(r, 'Round State not initialized.');
+}
+
+function assertPlayedCombinationNonNullable(c: Nullable<CardCombination>)
+: asserts c is CardCombination {
+    assertExpression(c, 'Inferred combination from played cards is null.');
 }
 
 export function handleWaitingForJoinEvent(
@@ -190,7 +198,7 @@ export function handleGameRoundStartedEvent(
                     },
                     tableState: {
                         pendingDragonSelection: false,
-                        currentCardKeys: [],
+                        currentCards: [],
                         pendingBomb: false,
                     },
                     leftOpponent: {
@@ -287,6 +295,7 @@ export function handleTableRoundStartedEvent(
                     ...s.gameContext.currentRoundState,
                     playerInTurnKey: e.data.currentPlayer,
                     tableState: {
+                        currentCards: [],
                         pendingBomb: false,
                         pendingDragonSelection: false,
                     }
@@ -355,22 +364,29 @@ export function handleCardsPlayedEvent(
     setCtxState?: AppContextStateSetter,
 ) {
     setCtxState?.(s => {
-        assertCurrentRoundNonNullable(s.gameContext.currentRoundState);
-        const thisPlayer = s.gameContext.currentRoundState.thisPlayer;
+        const currentRoundState = s.gameContext.currentRoundState;
+        assertCurrentRoundNonNullable(currentRoundState);
+        const thisPlayer = currentRoundState.thisPlayer;
+        const newCards = e.data.tableCardKeys.map(k => new UICardInfo(k));
+        const newCombination = createCombination(
+            newCards, currentRoundState.tableState.currentCards
+        );
+        assertPlayedCombinationNonNullable(newCombination);
         return {
             ...s,
             gameContext: {
                 ...s.gameContext,
                 currentRoundState: {
-                    ...s.gameContext.currentRoundState,
+                    ...currentRoundState,
                     playerInTurnKey: e.data.currentPlayer,
                     requestedCardName: e.data.requestedCardName,
                     tableState: {
                         pendingBomb: false,
                         pendingDragonSelection: false,
                         combinationType: e.data.combinationType,
-                        currentCardKeys: e.data.tableCardKeys,
+                        currentCards: newCards,
                         currentCardsOwner: e.playerKey,
+                        currentCombination: newCombination,
                     },
                     thisPlayer: (
                         (e.playerKey === s.gameContext.thisPlayer?.playerKey) ?
@@ -385,23 +401,23 @@ export function handleCardsPlayedEvent(
                     teammate: (
                         (e.playerKey === s.gameContext.teammate?.playerKey) ?
                         {
-                            ...s.gameContext.currentRoundState.teammate,
+                            ...currentRoundState.teammate,
                             numberOfCards: e.data.numCardsRemainingInHand,
-                        } : s.gameContext.currentRoundState.teammate
+                        } : currentRoundState.teammate
                     ),
                     leftOpponent: (
                         (e.playerKey === s.gameContext.leftOpponent?.playerKey) ?
                         {
-                            ...s.gameContext.currentRoundState.leftOpponent,
+                            ...currentRoundState.leftOpponent,
                             numberOfCards: e.data.numCardsRemainingInHand,
-                        } : s.gameContext.currentRoundState.leftOpponent
+                        } : currentRoundState.leftOpponent
                     ),
                     rightOpponent: (
                         (e.playerKey === s.gameContext.rightOpponent?.playerKey) ?
                         {
-                            ...s.gameContext.currentRoundState.rightOpponent,
+                            ...currentRoundState.rightOpponent,
                             numberOfCards: e.data.numCardsRemainingInHand,
-                        } : s.gameContext.currentRoundState.rightOpponent
+                        } : currentRoundState.rightOpponent
                     ),
                 }
             }

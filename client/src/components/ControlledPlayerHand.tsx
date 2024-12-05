@@ -20,6 +20,7 @@ import { PassTurnButton } from './PassTurnButton';
 import { DropBombButton } from './DropBombButton';
 import { InGamePlayerBoxWrapper } from './InGamePlayerBoxWrapper';
 import { PlayerBet } from '@tichu-ts/shared/game_logic/PlayerBet';
+import { Bomb } from '@tichu-ts/shared';
 
 export const ControlledPlayerHand: React.FC<{}> = () => {
 
@@ -28,23 +29,21 @@ export const ControlledPlayerHand: React.FC<{}> = () => {
 
     const [phoenixAltName, setPhoenixAltName] = useState<NormalCardName>();
 
-    const cards = useMemo(
-        () => {
-            const phoenixValue =
-                (phoenixAltName && getNormalCardValueByName(phoenixAltName)) ?? 0;
-            return currentRoundState
-                ?.thisPlayer.cardKeys.map(k => new UICardInfo(k)).sort(
-                    (a, b) => CardInfo.compareCardsAlt(a, b, phoenixValue)
-                ) ?? [];
-        },
-        [
-            currentRoundState?.thisPlayer.cardKeys,
-            phoenixAltName
-        ]
-    );
+    const cards = useMemo(() => {
+        return currentRoundState
+            ?.thisPlayer.cardKeys.map(k => new UICardInfo(k)) ?? [];
+    }, [currentRoundState?.thisPlayer.cardKeys]);
+
+    const sortedCards = useMemo(() => {
+        const phoenixValue =
+            (phoenixAltName && getNormalCardValueByName(phoenixAltName)) ?? 0;
+        return cards.sort(
+            (a, b) => CardInfo.compareCardsAlt(a, b, phoenixValue)
+        );
+    },[cards, phoenixAltName]);
 
     const [cardSelections, setCardSelections] = useState<{[s: string]: boolean}>(
-        cards.reduce((acc, c) => ({...acc, [c.key]: false}), {})
+        sortedCards.reduce((acc, c) => ({...acc, [c.key]: false}), {})
     );
 
     const hasSelectedCards = useMemo(
@@ -54,9 +53,9 @@ export const ControlledPlayerHand: React.FC<{}> = () => {
 
     useEffect(() => {
         setCardSelections(
-            cs => cards.reduce((acc, c) => ({...acc, [c.key]: cs[c.key]}), {})
+            cs => sortedCards.reduce((acc, c) => ({...acc, [c.key]: cs[c.key]}), {})
         );
-    }, [cards]);    
+    }, [sortedCards]);    
 
     const onCardClicked = useCallback(
         (cardKey: string) => setCardSelections({
@@ -69,6 +68,18 @@ export const ControlledPlayerHand: React.FC<{}> = () => {
     const canBetTichu =
         currentRoundState?.thisPlayer.cardKeys.length === 14 &&
         currentRoundState?.thisPlayer.playerBet === PlayerBet.NONE;
+
+    const hasPlayableBomb = useMemo(() => {
+        const bomb = Bomb.getStrongestBomb(cards);
+        const tableCombination = currentRoundState?.tableState.currentCombination;
+        return Boolean(
+            bomb && (
+                !(tableCombination instanceof Bomb) || (Number(
+                    Bomb.getStrongestBomb(cards)?.compareCombination(tableCombination)
+                ) > 0)
+            )
+        );
+    }, [currentRoundState?.tableState.currentCombination, cards]);
     
     return (
         <div className={styles.thisPlayer}>
@@ -76,7 +87,7 @@ export const ControlledPlayerHand: React.FC<{}> = () => {
                 playerKey={ctxState.gameContext.thisPlayer?.playerKey}
             >
                 <div className={styles.playerCardList}>{
-                    cards.map((c, i) => 
+                    sortedCards.map((c, i) => 
                         <Card
                             key={c.key} id={c.key} index={i}
                             cardImg={c.img} alt={c.imgAlt}
@@ -106,7 +117,7 @@ export const ControlledPlayerHand: React.FC<{}> = () => {
                         phoenixAltName={phoenixAltName}
                     />
                     <PassTurnButton/>
-                    <DropBombButton/>
+                    <DropBombButton hasPlayableBomb={hasPlayableBomb}/>
                 </div>
             </div>
         </div>
