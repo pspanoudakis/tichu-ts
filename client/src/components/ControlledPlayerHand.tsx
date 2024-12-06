@@ -52,9 +52,11 @@ export const ControlledPlayerHand: React.FC<{}> = () => {
     );
 
     useEffect(() => {
-        setCardSelections(
-            cs => sortedCards.reduce((acc, c) => ({...acc, [c.key]: cs[c.key]}), {})
-        );
+        setCardSelections(cs =>
+            sortedCards.reduce((acc, c) => (
+                {...acc, [c.key]: cs[c.key]}
+            ), {}
+        ));
     }, [sortedCards]);    
 
     const onCardClicked = useCallback(
@@ -74,9 +76,8 @@ export const ControlledPlayerHand: React.FC<{}> = () => {
         const tableCombination = currentRoundState?.tableState.currentCombination;
         return Boolean(
             bomb && (
-                !(tableCombination instanceof Bomb) || (Number(
-                    Bomb.getStrongestBomb(cards)?.compareCombination(tableCombination)
-                ) > 0)
+                !(tableCombination instanceof Bomb) ||
+                (bomb.compareCombination(tableCombination) > 0)
             )
         );
     }, [currentRoundState?.tableState.currentCombination, cards]);
