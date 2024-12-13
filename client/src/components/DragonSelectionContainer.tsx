@@ -1,8 +1,14 @@
 import React, { useContext, useMemo, useCallback } from "react";
 import styles from "../styles/Components.module.css";
-import { getCardConfigByKey, SpecialCards } from "@tichu-ts/shared/game_logic/CardConfig";
+import {
+    getCardConfigByKey,
+    SpecialCards
+} from "@tichu-ts/shared/game_logic/CardConfig";
 import { Card } from "./Card";
-import { ClientEventType, GiveDragonEvent } from "@tichu-ts/shared/schemas/events/ClientEvents";
+import {
+    ClientEventType,
+    GiveDragonEvent
+} from "@tichu-ts/shared/schemas/events/ClientEvents";
 import { dragonSelection1, dragonSelection2 } from "./styleUtils";
 import { AppContext } from "../AppContext";
 import { PlayerKey } from "@tichu-ts/shared/game_logic/PlayerKeys";

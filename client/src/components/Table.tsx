@@ -21,7 +21,6 @@ import {
 } from "@tichu-ts/shared/schemas/events/ServerEvents";
 import styles from "../styles/Components.module.css";
 import { Card } from "./Card";
-import { UICardInfo } from "../game_logic/UICardInfo";
 import { DragonSelectionContainer } from "./DragonSelectionContainer";
 import { usePlayerAccessProperty } from "../hooks/usePlayerAccessProperty";
 import { getCardConfigByKey } from "@tichu-ts/shared/game_logic/CardConfig";
@@ -133,11 +132,7 @@ export const Table: React.FC<{}> = () => {
 
     const requestedCardName = currentRoundState?.requestedCardName;
 
-    const tableCards = useMemo(() =>
-        // Table cards are sent sorted
-        currentRoundState?.tableState.currentCardKeys
-            ?.map(k => new UICardInfo(k)) ?? []
-    , [currentRoundState?.tableState.currentCardKeys]);
+    const tableCards = currentRoundState?.tableState.currentCards ?? [];
 
     const isPlayerCardsOwner = (
         gc.currentRoundState?.tableState.currentCardsOwner ===

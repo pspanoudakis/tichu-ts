@@ -13,8 +13,9 @@ export const WinScoreSelector: React.FC<{
     onSelected: (i: number) => void,
 }> = ({ onSelected }) => {
 
-    const onChange: React.ChangeEventHandler<HTMLSelectElement> =
-        useCallback((event) => onSelected(Number(event.target.value)), [onSelected]);
+    const onChange: React.ChangeEventHandler<HTMLSelectElement> = useCallback(
+        (event) => onSelected(Number(event.target.value)), [onSelected]
+    );
 
     return(
         <div className={styles.winScoreSelector}>

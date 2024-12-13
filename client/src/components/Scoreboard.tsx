@@ -6,10 +6,16 @@ import React, {
 } from "react";
 
 import styles from "../styles/Components.module.css"
-import { scoreboardMainEntryClass, scoreboardNormalEntryClass } from "./styleUtils";
+import {
+    scoreboardMainEntryClass,
+    scoreboardNormalEntryClass
+} from "./styleUtils";
 import { AppContext } from "../AppContext";
 import { RoundScore } from "@tichu-ts/shared/game_logic/RoundScore";
-import { TEAM_KEYS, TEAM_PLAYERS } from "@tichu-ts/shared/game_logic/PlayerKeys";
+import {
+    TEAM_KEYS,
+    TEAM_PLAYERS
+} from "@tichu-ts/shared/game_logic/PlayerKeys";
 
 export const Scoreboard: React.FC<{
     current: RoundScore,

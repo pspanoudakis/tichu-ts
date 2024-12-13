@@ -1,8 +1,13 @@
 import { useCallback, useContext } from "react";
 import { AppContext } from "../AppContext";
-import { ClientEventType } from "@tichu-ts/shared/schemas/events/ClientEvents";
+import {
+    ClientEventType,
+    DropBombEvent
+} from "@tichu-ts/shared/schemas/events/ClientEvents";
 
-export const DropBombButton: React.FC<{}> = () => {
+export const DropBombButton: React.FC<{
+    hasPlayableBomb: boolean
+}> = (props) => {
 
     const { state: ctxState } = useContext(AppContext);
 
@@ -10,9 +15,17 @@ export const DropBombButton: React.FC<{}> = () => {
         ctxState.socket?.emit(ClientEventType.DROP_BOMB);
     }, [ctxState.socket]);
 
+    const currentRoundState = ctxState.gameContext.currentRoundState;
+
     const canDropBomb =
-        !ctxState.gameContext.currentRoundState?.tableState.pendingBomb &&
-        !ctxState.gameContext.currentRoundState?.tableState.pendingDragonSelection;
+        props.hasPlayableBomb &&
+        !currentRoundState?.tableState.pendingBomb &&
+        !currentRoundState?.tableState.pendingDragonSelection && (
+            currentRoundState?.tableState.currentCombination || (
+                currentRoundState?.playerInTurnKey ===
+                ctxState.gameContext.thisPlayer?.playerKey
+            )
+        )
 
     return (
         canDropBomb ?
