@@ -3,7 +3,7 @@ import { SpecialCards } from "@tichu-ts/shared/game_logic/CardConfig";
 import { CardInfo } from "@tichu-ts/shared/game_logic/CardInfo";
 import { PlayerKey } from "@tichu-ts/shared/game_logic/PlayerKeys";
 import { PlayerBet } from "@tichu-ts/shared/game_logic/PlayerBet";
-import { BusinessError } from "../utils";
+import { BusinessError } from "../utils/errors";
 
 type PlayerTradeDecisions = {
     teammate: CardInfo,

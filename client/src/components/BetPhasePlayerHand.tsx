@@ -22,8 +22,6 @@ import {
 import { CardInfo } from "@tichu-ts/shared/game_logic/CardInfo";
 import {
     ClientEventType,
-    ReceiveTradeEvent,
-    RevealAllCardsEvent,
     TradeCardsEvent
 } from "@tichu-ts/shared/schemas/events/ClientEvents";
 import { TradeDecisions } from "../game_logic/TradeDecisions";
@@ -88,10 +86,7 @@ export const BetPhasePlayerHand: React.FC<{}> = () => {
     ]);
 
     const onCardsExpanded = useCallback(() => {
-        const e: RevealAllCardsEvent = {
-            eventType: ClientEventType.REVEAL_ALL_CARDS
-        };
-        ctxState.socket?.emit(ClientEventType.REVEAL_ALL_CARDS, e);
+        ctxState.socket?.emit(ClientEventType.REVEAL_ALL_CARDS);
     }, [ctxState.socket]);
 
     const onTradesFinalized = useCallback(() => {
@@ -101,7 +96,6 @@ export const BetPhasePlayerHand: React.FC<{}> = () => {
             tradeDecisions.rightOp?.key
         ) {
             const e: TradeCardsEvent = {
-                eventType: ClientEventType.TRADE_CARDS,
                 data: {
                     teammateCardKey: tradeDecisions.teammate.key,
                     leftCardKey: tradeDecisions.leftOp.key,
@@ -122,11 +116,8 @@ export const BetPhasePlayerHand: React.FC<{}> = () => {
     ]);
 
     const onTradesReceived = useCallback(() => {
-        const e: ReceiveTradeEvent = {
-            eventType: ClientEventType.RECEIVE_TRADE,
-        };
         ctxState.socket?.emit(
-            ClientEventType.RECEIVE_TRADE, e, () => setTradesReceived(true)
+            ClientEventType.RECEIVE_TRADE, () => setTradesReceived(true)
         );
     }, [ctxState.socket]);
 

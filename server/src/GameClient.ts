@@ -1,5 +1,5 @@
 import { PlayerKey } from "@tichu-ts/shared/game_logic/PlayerKeys";
-import { BusinessError } from "./utils";
+import { BusinessError } from "./utils/errors";
 
 export class GameClient {
     readonly playerKey: PlayerKey;

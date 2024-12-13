@@ -14,7 +14,7 @@ import { PLAYER_KEYS, PlayerKey, TEAM_KEYS, TEAM_PLAYERS } from "@tichu-ts/share
 import { PlayerState } from "./PlayerState";
 import { TableState } from "./TableState";
 import { RoundScore } from "@tichu-ts/shared/game_logic/RoundScore";
-import { BusinessError } from "../utils";
+import { BusinessError } from "../utils/errors";
 
 class PlayerCards {
     player1 = Array<CardInfo>();

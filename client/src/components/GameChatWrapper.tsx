@@ -149,7 +149,6 @@ export const GameChatWrapper: React.FC<{}> = () => {
 
     const onSendMessage = useCallback((text: string) => {
         const e: SendMessageEvent = {
-            eventType: ClientEventType.SEND_MESSAGE,
             data: { text },
         };
         ctxState.socket?.emit(ClientEventType.SEND_MESSAGE, e);
