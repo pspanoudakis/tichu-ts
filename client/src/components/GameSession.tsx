@@ -5,7 +5,6 @@ import {
     ServerEventType,
     zBetPlacedEvent,
     zGameEndedEvent,
-    zGameStartedEvent,
     zPlayerJoinedEvent,
     zPlayerLeftEvent,
     zWaitingForJoinEvent
@@ -23,10 +22,7 @@ import {
     handlePlayerLeftEvent,
     handleWaitingForJoinEvent
 } from "../AppContext";
-import {
-    ClientEventType,
-    StartGameEvent,
-} from "@tichu-ts/shared/schemas/events/ClientEvents";
+import { ClientEventType } from "@tichu-ts/shared/schemas/events/ClientEvents";
 import {
     errorEventListeners,
     eventHandlerWrapper,
@@ -35,6 +31,7 @@ import {
 import { GameRound } from "./GameRound";
 import { TEAM_PLAYERS } from "@tichu-ts/shared/game_logic/PlayerKeys";
 import { GameChatWrapper } from "./GameChatWrapper";
+import { noValidator } from "@tichu-ts/shared/schemas/events/SocketEvents";
 
 type GameSessionProps = {
     sessionId: string,
@@ -82,8 +79,7 @@ export const GameSession: React.FC<GameSessionProps> = ({
                         ClientEventType.JOIN_GAME, {
                             data: {
                                 playerNickname: playerNickname,
-                            },
-                            eventType: ClientEventType.JOIN_GAME,
+                            }
                         }
                     );
                 }
@@ -99,8 +95,8 @@ export const GameSession: React.FC<GameSessionProps> = ({
                 }
             ),
             [ServerEventType.GAME_STARTED]: eventHandlerWrapper(
-                zGameStartedEvent.parse, e => {
-                    setAppContextState(s => handleGameStartedEvent(s, e));
+                noValidator, () => {
+                    setAppContextState(s => handleGameStartedEvent(s));
                     setIsGameInProgress(true);
                 }                
             ),
@@ -175,11 +171,8 @@ export const GameSession: React.FC<GameSessionProps> = ({
     }, [exitSession, isGameInProgress]);
 
     const onStartGame = useCallback(() => {
-        const e: StartGameEvent = {
-            eventType: ClientEventType.START_GAME,
-        };
         appContextState.socket?.emit(
-            ClientEventType.START_GAME, e, () => setStartGamePressed(true)
+            ClientEventType.START_GAME, () => setStartGamePressed(true)
         );
     }, [appContextState.socket]);
 

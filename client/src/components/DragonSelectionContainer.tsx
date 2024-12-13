@@ -32,7 +32,6 @@ export const DragonSelectionContainer: React.FC<{}> = () => {
 
     const onDragonSelection = useCallback((to: PlayerKey) => {
         const e: GiveDragonEvent = {
-            eventType: ClientEventType.GIVE_DRAGON,
             data: {
                 chosenOponentKey: to,
             }

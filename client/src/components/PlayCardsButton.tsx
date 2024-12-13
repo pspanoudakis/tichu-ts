@@ -17,7 +17,6 @@ export const PlayCardsButton: React.FC<{
 
     const onCardsPlayed = useCallback(() => {
         const e: PlayCardsEvent = {
-            eventType: ClientEventType.PLAY_CARDS,
             data: {
                 selectedCardKeys:
                     Object.keys(cardSelections).filter(k => cardSelections[k]),

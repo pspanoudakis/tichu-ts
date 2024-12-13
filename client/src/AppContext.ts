@@ -11,8 +11,6 @@ import {
     GameEndedEvent,
     GameRoundEndedEvent,
     GameRoundStartedEvent,
-    GameStartedEvent,
-    PendingDragonDecisionEvent,
     PlayerJoinedEvent,
     PlayerLeftEvent,
     TableRoundStartedEvent,
@@ -25,10 +23,11 @@ import { PLAYER_KEYS } from '@tichu-ts/shared/game_logic/PlayerKeys';
 import { PlayerBet } from '@tichu-ts/shared/game_logic/PlayerBet';
 import { CardCombination, createCombination } from '@tichu-ts/shared';
 import { UICardInfo } from './game_logic/UICardInfo';
+import { ServerEvents, ClientEvents } from '@tichu-ts/shared/schemas/events/SocketEvents';
 
 export type AppContextState = {
     gameContext: GameState,
-    socket?: Socket,
+    socket?: Socket<ServerEvents, ClientEvents>,
 };
 
 export type AppContextStateSetter =
@@ -487,7 +486,6 @@ export function handleCardRequestedEvent(
 }
 
 export function handlePendingDragonDecisionEvent(
-    _: PendingDragonDecisionEvent,
     setCtxState?: AppContextStateSetter,
 ) {
     setCtxState?.(s => {
@@ -568,9 +566,7 @@ export function handlePlayerLeftEvent(
     };
 }
 
-export function handleGameStartedEvent(
-    s: AppContextState, _: GameStartedEvent
-): AppContextState {
+export function handleGameStartedEvent(s: AppContextState): AppContextState {
     return {
         ...s,
         gameContext: {

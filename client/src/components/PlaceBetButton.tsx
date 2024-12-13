@@ -17,7 +17,6 @@ export const PlaceBetButton: React.FC<{
 
     const onBetPlaced = useCallback(() => {
         const e: PlaceBetEvent = {
-            eventType: ClientEventType.PLACE_BET,
             data: {
                 betPoints: props.bet,
             } ,

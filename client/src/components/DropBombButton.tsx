@@ -12,10 +12,7 @@ export const DropBombButton: React.FC<{
     const { state: ctxState } = useContext(AppContext);
 
     const onBombDropped = useCallback(() => {
-        const e: DropBombEvent = {
-            eventType: ClientEventType.DROP_BOMB,
-        };
-        ctxState.socket?.emit(ClientEventType.DROP_BOMB, e);
+        ctxState.socket?.emit(ClientEventType.DROP_BOMB);
     }, [ctxState.socket]);
 
     const currentRoundState = ctxState.gameContext.currentRoundState;
