@@ -28,7 +28,9 @@ import { TradeDecisions } from "../game_logic/TradeDecisions";
 import { PlaceBetButton } from "./PlaceBetButton";
 import { PlayerBet } from "@tichu-ts/shared/game_logic/PlayerBet";
 
-export const BetPhasePlayerHand: React.FC<{}> = () => {
+export const BetPhasePlayerHand: React.FC<{
+    gameInProgress: boolean,
+}> = (props) => {
 
     const {state: ctxState, setState: setCtxState} = useContext(AppContext);
 
@@ -154,7 +156,7 @@ export const BetPhasePlayerHand: React.FC<{}> = () => {
                 bet={playerBet}
             />
             {
-                cardsExpanded ? (
+                props.gameInProgress && (cardsExpanded ? (
                     <>
                         <div className={styles.preTradeCardList}>{
                             nonSelectedCards.map((card, i) => (
@@ -258,7 +260,7 @@ export const BetPhasePlayerHand: React.FC<{}> = () => {
                             }
                         </div>
                     </>
-                )
+                ))
             }
         </div>
     );
