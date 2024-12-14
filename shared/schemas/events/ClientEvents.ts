@@ -29,7 +29,7 @@ export type JoinGameEvent = z.infer<typeof zJoinGameEvent>;
 export const zPlayCardsEvent = createGameEventSchema(
     z.object({
         selectedCardKeys: z.array(zCardKey),
-        phoenixAltName: zCardName.optional()
+        phoenixAltName: z.optional(zNormalCardName),
     })
 )
 export type PlayCardsEvent = z.infer<typeof zPlayCardsEvent>;

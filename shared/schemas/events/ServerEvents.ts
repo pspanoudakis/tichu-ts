@@ -76,6 +76,7 @@ export const zCardsPlayedEvent = createGameEventSchema(
         tableCardKeys: z.array(zCardKey),
         requestedCardName: z.optional(zNormalCardName),
         currentPlayer: zPlayerKey,
+        phoenixAltName: z.optional(zNormalCardName),
     }),
     zPlayerKey,
 );

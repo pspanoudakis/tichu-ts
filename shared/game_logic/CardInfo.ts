@@ -133,10 +133,15 @@ export class PhoenixCard extends CardInfo {
     private _altValue: number;
     private _altName: string;
 
-    constructor() {
+    constructor(altName?: string) {
         super(SpecialCards.Phoenix);
-        this._altName = '';
-        this._altValue = 0.5;
+        if (altName) {
+            this._altValue = getNormalCardValueByName(altName);
+            this._altName = altName;
+        } else {
+            this._altName = '';
+            this._altValue = 0.5;
+        }
     }
 
     get altValue() {

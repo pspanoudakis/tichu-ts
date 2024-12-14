@@ -217,6 +217,7 @@ export class GameState {
                 requestedCardName: 
                     this.currentRound.requestedCardName,
                 currentPlayer: this.currentRound.currentPlayerKey,
+                phoenixAltName: e.data.phoenixAltName
             }
         });
         if (this.currentRound.mustEndGameRound()) {

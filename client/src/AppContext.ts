@@ -21,9 +21,17 @@ import { TradeDecisions } from './game_logic/TradeDecisions';
 import { GameRoundState } from './state_types/GameRoundState';
 import { PLAYER_KEYS } from '@tichu-ts/shared/game_logic/PlayerKeys';
 import { PlayerBet } from '@tichu-ts/shared/game_logic/PlayerBet';
-import { CardCombination, createCombination } from '@tichu-ts/shared';
+import { 
+    CardCombination,
+    createCombination,
+    PhoenixCard,
+    SpecialCards
+} from '@tichu-ts/shared';
 import { UICardInfo } from './game_logic/UICardInfo';
-import { ServerEvents, ClientEvents } from '@tichu-ts/shared/schemas/events/SocketEvents';
+import {
+    ServerEvents,
+    ClientEvents
+} from '@tichu-ts/shared/schemas/events/SocketEvents';
 
 export type AppContextState = {
     gameContext: GameState,
@@ -368,7 +376,15 @@ export function handleCardsPlayedEvent(
         const thisPlayer = currentRoundState.thisPlayer;
         const newCards = e.data.tableCardKeys.map(k => new UICardInfo(k));
         const newCombination = createCombination(
-            newCards, currentRoundState.tableState.currentCards
+            newCards.map(c => {
+                if (c.key !== SpecialCards.Phoenix) return c;
+                assertExpression(
+                    e.data.phoenixAltName,
+                    `Expected Phoenix alt name, received: ${e.data.phoenixAltName}`
+                );
+                return new PhoenixCard(e.data.phoenixAltName);
+            }),
+            currentRoundState.tableState.currentCards
         );
         assertPlayedCombinationNonNullable(newCombination);
         return {
