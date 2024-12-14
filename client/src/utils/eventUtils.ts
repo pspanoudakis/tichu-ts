@@ -18,13 +18,14 @@ export function eventHandlerWrapper<
     eventHandler: (...e: EventParams) => void,
 ) {
     return (...args: EventParams) => {
-        let e;
         try {
-            e = validator(args[0]);
+            // Validate first arg (event data)
+            validator(args[0]);
         } catch (error) {
             return logError('Validation Error', error);
         }
         try {
+            // Provide all args to event handler (including ACK callbacks)
             eventHandler(...args);
         } catch (error) {
             return logError('Error in event handler', error);

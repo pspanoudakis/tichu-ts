@@ -1,9 +1,6 @@
 import { useCallback, useContext } from "react";
 import { AppContext } from "../AppContext";
-import {
-    ClientEventType,
-    DropBombEvent
-} from "@tichu-ts/shared/schemas/events/ClientEvents";
+import { ClientEventType } from "@tichu-ts/shared/schemas/events/ClientEvents";
 
 export const DropBombButton: React.FC<{
     hasPlayableBomb: boolean

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createGameEventSchema } from "./GameEvent";
-import { zCardKey, zCardName, zNormalCardName } from "../../game_logic/CardConfig";
+import { zCardKey, zNormalCardName } from "../../game_logic/CardConfig";
 import { zPlayerKey } from "../../game_logic/PlayerKeys";
 import { PlayerBet } from "../../game_logic/PlayerBet";
 
