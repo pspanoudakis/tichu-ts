@@ -1,28 +1,30 @@
 import React, { useCallback } from "react";
-
-import styles from "../styles/Components.module.css"
+import {
+    NativeSelectField,
+    NativeSelectRoot,
+} from "@chakra-ui/react";
+import { Field } from "./ui/field";
 
 const winningScores = [0, 500, 1000];
-const scoreOptions = winningScores.map( (score, index) =>
-    <option value={score.toString()} key={index}>
-        {score} 
-    </option>
-);
 
 export const WinScoreSelector: React.FC<{
     onSelected: (i: number) => void,
 }> = ({ onSelected }) => {
 
-    const onChange: React.ChangeEventHandler<HTMLSelectElement> = useCallback(
-        (event) => onSelected(Number(event.target.value)), [onSelected]
+    const onChange: React.FormEventHandler<HTMLSelectElement> = useCallback(
+        (e) => onSelected(Number(e.currentTarget.value)),
+        [onSelected]
     );
 
-    return(
-        <div className={styles.winScoreSelector}>
-            Select winning score:
-            <select onChange={onChange}>
-                {scoreOptions}
-            </select>
-        </div>
+    return (
+        <Field label="Winning Score">
+            <NativeSelectRoot variant={'subtle'}>
+                <NativeSelectField onChange={onChange}>{
+                    winningScores.map(s => 
+                        <option key={s} label={s.toString()} value={s}>{s}</option>
+                    )
+                }</NativeSelectField>
+            </NativeSelectRoot>
+        </Field>
     );
 }

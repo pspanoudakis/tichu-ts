@@ -9,6 +9,16 @@ import { WinScoreSelector } from "./WinScoreSelector";
 
 import styles from "../styles/Components.module.css";
 import tichuLogo from "../assets/tichu_logo.png"
+import {
+    Button,
+    ChakraProvider,
+    defaultSystem,
+    Flex,
+    Input,
+    Tabs,
+    Theme,
+} from "@chakra-ui/react";
+import { Field } from "./ui/field";
 
 function checkNickname(n: string) {
     if (n) return true;
@@ -73,67 +83,71 @@ const App: React.FC<{}> = () => {
 
     const onSessionClosed = useCallback(() => setCurrentSessionId(undefined), []);
 
-    return (
-        <div className={styles.appRoot}>{
-            loading ?
-            <div>Loading...</div>
-            : (
-                currentSessionId ?
-                <GameSession
-                    sessionId={currentSessionId}
-                    playerNickname={nickname}
-                    exitSession={onSessionClosed}
-                />
-                :
-                <div className={styles.enteringSceneContainer}>
-                    <img src={tichuLogo} alt={"Tichu Logo"} className={styles.gameLogo}/>
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        rowGap: '1ch'
-                    }}>
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            columnGap: '1ch',
-                        }}>
-                            <span>Nickname:</span>
-                            <input
-                                value={nickname}
-                                onChange={e => setNickname(e.target.value)}
-                            />
-                        </div>
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            columnGap: '1ch',
-                        }}>
-                            <span>Room ID:</span>
-                            <input
-                                value={inputSessionId}
-                                onChange={e => setInputSessionId(e.target.value)}
-                            />
-                            <button onClick={onJoinOpenSessionById}>Join Room</button>
-                        </div>
-                        <WinScoreSelector onSelected={onWinningScoreSelected}/>
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'space-around',
-                        }}>
-                            <button onClick={onCreateSession}>Create New Room</button>
-                            <button onClick={onJoinOpenSession}>Join Open Room</button>
-                        </div>
-                    </div>
-                </div>
-            )
-        }</div>
-    );
+    return <div className={styles.appRoot}>{
+        loading ? <div>Loading...</div> : (
+            currentSessionId ?
+            <GameSession
+                sessionId={currentSessionId}
+                playerNickname={nickname}
+                exitSession={onSessionClosed}
+            />
+            :
+            <div className={styles.enteringSceneContainer}>
+                <img src={tichuLogo} alt={"Tichu Logo"} className={styles.gameLogo}/>
+                <ChakraProvider value={defaultSystem}>
+                    <Theme appearance="dark" hasBackground={false}>
+                        <Flex gap={'1ch'} alignItems={'center'}>
+                            <Field label="Nickname">
+                                <Input
+                                    variant={'subtle'}
+                                    value={nickname}
+                                    onChange={e => setNickname(e.target.value)}
+                                    placeholder="Enter nickname..."
+                                />
+                            </Field>
+                        </Flex>
+                        <Tabs.Root defaultValue="createRoom" variant={'line'}>
+                            <Tabs.List>
+                                <Tabs.Trigger value="createRoom">
+                                    Create New Room
+                                </Tabs.Trigger>
+                                <Tabs.Trigger value="joinRoom">
+                                    Join Room
+                                </Tabs.Trigger>
+                            </Tabs.List>
+                            <Tabs.Content value="createRoom">
+                                <Flex gap={'1ch'} alignItems={'end'}>
+                                    <WinScoreSelector onSelected={onWinningScoreSelected}/>
+                                    <Button onClick={onCreateSession}>
+                                        Create New Room
+                                    </Button>
+                                </Flex>
+                            </Tabs.Content>
+                            <Tabs.Content value="joinRoom">
+                                <Flex direction={'column'} gap='1ch'>
+                                    <Button onClick={onJoinOpenSession}>
+                                        Join Open Room
+                                    </Button>
+                                    <Flex gap='1ch'>
+                                        <Input
+                                            variant={'subtle'}
+                                            value={inputSessionId}
+                                            onChange={e => setInputSessionId(e.target.value)}
+                                            placeholder="Enter a Room ID"
+                                            maxW="20ch"
+                                        />
+                                        <Button onClick={onJoinOpenSessionById}>
+                                            Join Room
+                                        </Button>
+                                    </Flex>
+                                </Flex>
+                            </Tabs.Content>
+                        </Tabs.Root>
+                    </Theme>
+                </ChakraProvider>
+            </div>
+        )
+    }</div>;
 }
 
 export default App;
