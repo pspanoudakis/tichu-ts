@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { Field } from "./ui/field";
 import { GenericButton } from "./ui/GenericButton";
+import { LoadingScreen } from "./LoadingScreen";
 
 function checkNickname(n: string) {
     if (n) return true;
@@ -84,7 +85,7 @@ const App: React.FC<{}> = () => {
     const onSessionClosed = useCallback(() => setCurrentSessionId(undefined), []);
 
     return <div className={styles.appRoot}><ChakraProvider value={defaultSystem}>{
-        loading ? <div>Loading...</div> : (
+        loading ? <LoadingScreen label="Loading..."/> : (
             currentSessionId ?
             <GameSession
                 sessionId={currentSessionId}

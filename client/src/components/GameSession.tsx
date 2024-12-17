@@ -32,8 +32,10 @@ import { GameRound } from "./GameRound";
 import { TEAM_PLAYERS } from "@tichu-ts/shared/game_logic/PlayerKeys";
 import { GameChatWrapper } from "./GameChatWrapper";
 import { noValidator } from "@tichu-ts/shared/schemas/events/SocketEvents";
-import { Flex} from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { GenericButton } from "./ui/GenericButton";
+import { SessionDetailsButton } from "./SessionDetailsButton";
+import { LoadingScreen } from "./LoadingScreen";
 
 type GameSessionProps = {
     sessionId: string,
@@ -186,9 +188,7 @@ export const GameSession: React.FC<GameSessionProps> = ({
 			}}
 		>{
             connectingToSession ?
-            <div>
-                Connecting to session...
-            </div>
+            <LoadingScreen label="Connecting to session..."/>
             :
             <div className={styles.gameContainer}>
                 <Scoreboard
@@ -221,7 +221,10 @@ export const GameSession: React.FC<GameSessionProps> = ({
                             ▶ Start Game
                         </GenericButton>
                     }
-                    <GameChatWrapper/>
+                    <Flex columnGap='0.2em'>
+                        <SessionDetailsButton/>
+                        <GameChatWrapper/>
+                    </Flex>
                 </Flex>
             </div>
         }</AppContext.Provider>
