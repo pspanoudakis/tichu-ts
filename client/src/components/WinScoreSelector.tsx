@@ -9,7 +9,8 @@ const winningScores = [0, 500, 1000];
 
 export const WinScoreSelector: React.FC<{
     onSelected: (i: number) => void,
-}> = ({ onSelected }) => {
+    score: number,
+}> = ({ onSelected, score }) => {
 
     const onChange: React.FormEventHandler<HTMLSelectElement> = useCallback(
         (e) => onSelected(Number(e.currentTarget.value)),
@@ -19,7 +20,7 @@ export const WinScoreSelector: React.FC<{
     return (
         <Field label="Winning Score">
             <NativeSelectRoot variant={'subtle'}>
-                <NativeSelectField onChange={onChange}>{
+                <NativeSelectField onChange={onChange} value={score}>{
                     winningScores.map(s => 
                         <option key={s} label={s.toString()} value={s}>{s}</option>
                     )

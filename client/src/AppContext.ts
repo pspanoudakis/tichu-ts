@@ -104,6 +104,7 @@ export function handleWaitingForJoinEvent(
         ...s,
         gameContext: {
             ...s.gameContext,
+            winningScore: e.data.winningScore,
             thisPlayer: {
                 playerKey: e.playerKey,
                 playerIndex: thisIdx,

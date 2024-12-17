@@ -27,7 +27,7 @@ function checkNickname(n: string) {
     return false;
 }
 
-const App: React.FC<{}> = () => {
+export const App: React.FC<{}> = () => {
 
     const [loading, setLoading] = useState(false);
     const [currentSessionId, setCurrentSessionId] = useState<string | undefined>();
@@ -117,19 +117,18 @@ const App: React.FC<{}> = () => {
                             </Tabs.List>
                             <Tabs.Content value="createRoom">
                                 <Flex gap={'1ch'} alignItems={'end'}>
-                                    <WinScoreSelector onSelected={onWinningScoreSelected}/>
-                                    <GenericButton
-                                        onClick={onCreateSession}
-                                    >
+                                    <WinScoreSelector
+                                        onSelected={onWinningScoreSelected}
+                                        score={winningScore}
+                                    />
+                                    <GenericButton onClick={onCreateSession}>
                                         Create New Room
                                     </GenericButton>
                                 </Flex>
                             </Tabs.Content>
                             <Tabs.Content value="joinRoom">
                                 <Flex direction={'column'} gap='1ch'>
-                                    <GenericButton
-                                        onClick={onJoinOpenSession}
-                                    >
+                                    <GenericButton onClick={onJoinOpenSession}>
                                         Join Open Room
                                     </GenericButton>
                                     <Flex gap='1ch'>
@@ -140,9 +139,7 @@ const App: React.FC<{}> = () => {
                                             placeholder="Enter a Room ID"
                                             maxW="20ch"
                                         />
-                                        <GenericButton
-                                            onClick={onJoinOpenSessionById}
-                                        >
+                                        <GenericButton onClick={onJoinOpenSessionById}>
                                             Join Room
                                         </GenericButton>
                                     </Flex>
@@ -154,5 +151,3 @@ const App: React.FC<{}> = () => {
         )
     }</ChakraProvider></div>;
 }
-
-export default App;

@@ -222,7 +222,10 @@ export const GameSession: React.FC<GameSessionProps> = ({
                         </GenericButton>
                     }
                     <Flex columnGap='0.2em'>
-                        <SessionDetailsButton/>
+                        <SessionDetailsButton
+                            roomId={sessionId}
+                            winningScore={appContextState.gameContext.winningScore}
+                        />
                         <GameChatWrapper/>
                     </Flex>
                 </Flex>
