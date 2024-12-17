@@ -27,6 +27,7 @@ import {
 import { TradeDecisions } from "../game_logic/TradeDecisions";
 import { PlaceBetButton } from "./PlaceBetButton";
 import { PlayerBet } from "@tichu-ts/shared/game_logic/PlayerBet";
+import { GenericButton } from "./ui/GenericButton";
 
 export const BetPhasePlayerHand: React.FC<{
     gameInProgress: boolean,
@@ -193,42 +194,35 @@ export const BetPhasePlayerHand: React.FC<{
                             ))
                         }</div>
                         <div className={styles.tradePhaseButtonContainer}>
-                            {
-                                tradesSent ? (
-                                    incomingTradesSent ? (
-                                        tradesReceived ?
-                                            <button className={styles.inactiveButton}>
-                                                Cards Received
-                                            </button>
-                                            :
-                                            <button
-                                                className={styles.tradePhaseButton}
-                                                onClick={onTradesReceived}    
-                                            >
-                                                Receive Cards
-                                            </button>
-                                    ) : (
-                                        <button className={styles.inactiveButton}>
-                                            Cards Sent
-                                        </button>
-                                    )
-                                ) : (
-                                    <button
-                                        className={styles.tradePhaseButton}
-                                        onClick={onTradesFinalized}
+                        {
+                            tradesSent ? (
+                                incomingTradesSent ? (
+                                    <GenericButton
+                                        w='35%'
+                                        disabled={tradesReceived}
+                                        onClick={onTradesReceived}
                                     >
-                                        Send
-                                    </button>
+                                    { tradesReceived ? 'Cards Received' : 'Receive Cards' }
+                                    </GenericButton>
+                                ) : (
+                                    <GenericButton w='35%' disabled>
+                                        Cards Sent
+                                    </GenericButton>
                                 )
-                            }
-                            {
-                                (playerBet === PlayerBet.NONE || !playerBet) && (
-                                    <PlaceBetButton
-                                        bet={PlayerBet.TICHU}
-                                        className={styles.tradePhaseButton}
-                                    />
-                                )
-                            }
+                            ) : (
+                                <GenericButton w='35%' onClick={onTradesFinalized}>
+                                    Send
+                                </GenericButton>
+                            )
+                        }
+                        {
+                            (playerBet === PlayerBet.NONE || !playerBet) && (
+                                <PlaceBetButton
+                                    bet={PlayerBet.TICHU}
+                                    className={styles.tradePhaseButton}
+                                />
+                            )
+                        }
                         </div>
                     </>
                 ) : (
@@ -244,12 +238,9 @@ export const BetPhasePlayerHand: React.FC<{
                         }</div>
                         <div className={styles.tradingCardSlots}/>
                         <div className={styles.tradePhaseButtonContainer}>
-                            <button
-                                className={styles.tradePhaseButton}
-                                onClick={onCardsExpanded}
-                            >
+                            <GenericButton w='35%' onClick={onCardsExpanded}>
                                 Expand Cards
-                            </button>
+                            </GenericButton>
                             {
                                 (playerBet === PlayerBet.NONE || !playerBet) && (
                                     <PlaceBetButton

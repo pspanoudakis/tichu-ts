@@ -10,7 +10,6 @@ import { WinScoreSelector } from "./WinScoreSelector";
 import styles from "../styles/Components.module.css";
 import tichuLogo from "../assets/tichu_logo.png"
 import {
-    Button,
     ChakraProvider,
     defaultSystem,
     Flex,
@@ -19,6 +18,7 @@ import {
     Theme,
 } from "@chakra-ui/react";
 import { Field } from "./ui/field";
+import { GenericButton } from "./ui/GenericButton";
 
 function checkNickname(n: string) {
     if (n) return true;
@@ -83,7 +83,7 @@ const App: React.FC<{}> = () => {
 
     const onSessionClosed = useCallback(() => setCurrentSessionId(undefined), []);
 
-    return <div className={styles.appRoot}>{
+    return <div className={styles.appRoot}><ChakraProvider value={defaultSystem}>{
         loading ? <div>Loading...</div> : (
             currentSessionId ?
             <GameSession
@@ -94,7 +94,6 @@ const App: React.FC<{}> = () => {
             :
             <div className={styles.enteringSceneContainer}>
                 <img src={tichuLogo} alt={"Tichu Logo"} className={styles.gameLogo}/>
-                <ChakraProvider value={defaultSystem}>
                     <Theme appearance="dark" hasBackground={false}>
                         <Flex gap={'1ch'} alignItems={'center'}>
                             <Field label="Nickname">
@@ -118,16 +117,20 @@ const App: React.FC<{}> = () => {
                             <Tabs.Content value="createRoom">
                                 <Flex gap={'1ch'} alignItems={'end'}>
                                     <WinScoreSelector onSelected={onWinningScoreSelected}/>
-                                    <Button onClick={onCreateSession}>
+                                    <GenericButton
+                                        onClick={onCreateSession}
+                                    >
                                         Create New Room
-                                    </Button>
+                                    </GenericButton>
                                 </Flex>
                             </Tabs.Content>
                             <Tabs.Content value="joinRoom">
                                 <Flex direction={'column'} gap='1ch'>
-                                    <Button onClick={onJoinOpenSession}>
+                                    <GenericButton
+                                        onClick={onJoinOpenSession}
+                                    >
                                         Join Open Room
-                                    </Button>
+                                    </GenericButton>
                                     <Flex gap='1ch'>
                                         <Input
                                             variant={'subtle'}
@@ -136,18 +139,19 @@ const App: React.FC<{}> = () => {
                                             placeholder="Enter a Room ID"
                                             maxW="20ch"
                                         />
-                                        <Button onClick={onJoinOpenSessionById}>
+                                        <GenericButton
+                                            onClick={onJoinOpenSessionById}
+                                        >
                                             Join Room
-                                        </Button>
+                                        </GenericButton>
                                     </Flex>
                                 </Flex>
                             </Tabs.Content>
                         </Tabs.Root>
                     </Theme>
-                </ChakraProvider>
             </div>
         )
-    }</div>;
+    }</ChakraProvider></div>;
 }
 
 export default App;

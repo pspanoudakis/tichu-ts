@@ -1,6 +1,7 @@
 import { useCallback, useContext } from "react";
 import { AppContext } from "../AppContext";
 import { ClientEventType } from "@tichu-ts/shared/schemas/events/ClientEvents";
+import { GenericButton } from "./ui/GenericButton";
 
 export const DropBombButton: React.FC<{
     hasPlayableBomb: boolean
@@ -26,7 +27,7 @@ export const DropBombButton: React.FC<{
 
     return (
         canDropBomb ?
-        <button onClick={onBombDropped}>Bomb</button>
+        <GenericButton onClick={onBombDropped}>Bomb</GenericButton>
         : null
     );
 }

@@ -20,6 +20,9 @@ import {
 } from "../utils/eventUtils";
 
 import styles from "../styles/Components.module.css";
+import { GenericButton } from "./ui/GenericButton";
+import { Input } from "@chakra-ui/react";
+import { LuSend } from "react-icons/lu";
 
 type MessageInfo = {
     data: MessageData,
@@ -106,17 +109,17 @@ const ChatContainer: React.FC<{
                 </div>
             </div>
             <div className={styles.chatFooter}>
-                <input
-                    style={{
-                        width: '100%',
-                        height: '3vh'
-                    }}
+                <Input
+                    color='black'
+                    variant={'subtle'}
+                    w='100%'
+                    h='100%'
                     value={text}
                     onChange={onTextChange}
                 />
-                <button onClick={onSendMessage}>
-                    Send
-                </button>
+                <GenericButton h='3.5em' onClick={onSendMessage}>
+                    <LuSend/>
+                </GenericButton>
             </div>
         </div>
     )
@@ -161,15 +164,9 @@ export const GameChatWrapper: React.FC<{}> = () => {
                 display: 'contents',
             }}
         >
-            <button
-                onClick={toggleChat}
-                style={{
-                    width: '14ch',
-                    minWidth: 'max-content',
-                }}
-            >
+            <GenericButton w='8em' onClick={toggleChat}>
                 {`✉ ${isChatOpen ? 'Hide Chat' : 'Show Chat'}`}
-            </button>
+            </GenericButton>
             {
                 isChatOpen &&
                 <ChatContainer

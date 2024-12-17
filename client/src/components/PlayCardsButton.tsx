@@ -5,6 +5,7 @@ import {
     ClientEventType,
     PlayCardsEvent
 } from "@tichu-ts/shared/schemas/events/ClientEvents";
+import { GenericButton } from "./ui/GenericButton";
 
 export const PlayCardsButton: React.FC<{
     cardSelections: {
@@ -35,7 +36,7 @@ export const PlayCardsButton: React.FC<{
 
     return (
         canPlayCards ?
-        <button onClick={onCardsPlayed}>Play Cards</button>
+        <GenericButton onClick={onCardsPlayed}>Play Cards</GenericButton>
         : null
     );
 }
