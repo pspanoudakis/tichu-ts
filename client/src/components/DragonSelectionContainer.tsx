@@ -9,9 +9,10 @@ import {
     ClientEventType,
     GiveDragonEvent
 } from "@tichu-ts/shared/schemas/events/ClientEvents";
-import { dragonSelection1, dragonSelection2 } from "./styleUtils";
 import { AppContext } from "../AppContext";
 import { PlayerKey } from "@tichu-ts/shared/game_logic/PlayerKeys";
+import { Button } from "@chakra-ui/react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export const DragonSelectionContainer: React.FC<{}> = () => {
 
@@ -54,13 +55,12 @@ export const DragonSelectionContainer: React.FC<{}> = () => {
         <div className={styles.dragonSelectionTableContainer}>
             {
                 isLeftOpponentActive ?
-                <button
-                    key='<-' id='<-'
+                <Button
                     onClick={onDragonSelectionLeft}
-                    className={dragonSelection1}
+                    w='2em' h='3em'
                 >
-                    {'<-'}
-                </button>
+                    <FaChevronLeft/>
+                </Button>
                 : ''
             }
             <Card
@@ -72,13 +72,12 @@ export const DragonSelectionContainer: React.FC<{}> = () => {
             />
             {
                 isRightOpponentActive ?
-                <button
-                    key='->' id='->'
+                <Button
+                    w='2em' h='3em'
                     onClick={onDragonSelectionRight}
-                    className={dragonSelection2}
                 >
-                    {'->'}
-                </button>
+                    <FaChevronRight/>
+                </Button>
                 : ''
             }
         </div> : null

@@ -120,7 +120,7 @@ button {
     width: 100%;
     height: 95%;
     display: grid;
-    grid-template-rows: 32.5% 32.5% 32.5%;
+    grid-template-rows: 30% 30% 35%;
     grid-template-columns: 32.5% 32.5% 32.5%;
     grid-column-gap: 1%;
     grid-row-gap: 1%;
@@ -260,22 +260,34 @@ button {
 }
 
 .rightActionButtonsContainer {
-    justify-content: right;    
+    justify-content: right;
+    column-gap: 0.1em;    
 }
 
 .selectionBoxStyle {
     display: flex;
+    column-gap: 0.1em;
     width: 100%;
     height: min-content;
     overflow: visible;
 }
 .selectionButtonStyle {
     overflow: visible;
+    width: 2.5em;
+    background-color: white;
+    color: black;
+    transition: 0.2s;
+    border-radius: 0.25em;
+}
+.selectionButtonStyle:hover {
+    background-color: rgb(185, 178, 178);
+    cursor: pointer;
 }
 
 .phoenixSelectionContainer {
     display: flex;
     flex-direction: row;
+    column-gap: 0.3em;
 }
 
 .phoenixSelectMenu {
@@ -326,6 +338,7 @@ button {
 .tradePhaseButtonContainer {
     width: 100%;
     display: flex;
+    column-gap: 0.1em;
     flex-direction: row;
     justify-content: center;
 }
@@ -429,4 +442,5 @@ button {
     flex-direction: row;
     justify-content: stretch;
     padding: 0.5ch;
+    height: max-content;
 }

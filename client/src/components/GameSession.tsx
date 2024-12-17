@@ -32,6 +32,10 @@ import { GameRound } from "./GameRound";
 import { TEAM_PLAYERS } from "@tichu-ts/shared/game_logic/PlayerKeys";
 import { GameChatWrapper } from "./GameChatWrapper";
 import { noValidator } from "@tichu-ts/shared/schemas/events/SocketEvents";
+import { Flex } from "@chakra-ui/react";
+import { GenericButton } from "./ui/GenericButton";
+import { SessionDetailsButton } from "./SessionDetailsButton";
+import { LoadingScreen } from "./LoadingScreen";
 
 type GameSessionProps = {
     sessionId: string,
@@ -184,9 +188,7 @@ export const GameSession: React.FC<GameSessionProps> = ({
 			}}
 		>{
             connectingToSession ?
-            <div>
-                Connecting to session...
-            </div>
+            <LoadingScreen label="Connecting to session..."/>
             :
             <div className={styles.gameContainer}>
                 <Scoreboard
@@ -201,30 +203,32 @@ export const GameSession: React.FC<GameSessionProps> = ({
                     }}
                 />
                 <GameRound/>
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: "center",
-                        paddingLeft: '1ch',
-                        paddingRight: '1ch',
-                    }}
+                <Flex
+                    direction='row'
+                    justifyContent='space-between'
+                    alignItems='center'
+                    paddingX='1ch'
                 >
-                    <button onClick={onGameExit}>
-                        {'⬅ Exit Game'}
-                    </button>
+                    <GenericButton onClick={onGameExit}>
+                        ⬅ Exit Game
+                    </GenericButton>
                     {
                         !isGameInProgress && 
-                        <button
+                        <GenericButton
                             onClick={onStartGame}
                             disabled={startGamePressed}
                         >
-                        ▶ Start Game
-                        </button>
+                            ▶ Start Game
+                        </GenericButton>
                     }
-                    <GameChatWrapper/>
-                </div>
+                    <Flex columnGap='0.2em'>
+                        <SessionDetailsButton
+                            roomId={sessionId}
+                            winningScore={appContextState.gameContext.winningScore}
+                        />
+                        <GameChatWrapper/>
+                    </Flex>
+                </Flex>
             </div>
         }</AppContext.Provider>
     );

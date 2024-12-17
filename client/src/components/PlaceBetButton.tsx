@@ -5,6 +5,7 @@ import {
 } from "@tichu-ts/shared/schemas/events/ClientEvents";
 import { AppContext } from "../AppContext";
 import { PlayerBet } from "@tichu-ts/shared/game_logic/PlayerBet";
+import { GenericButton } from "./ui/GenericButton";
 
 type AllowedBet = PlayerBet.TICHU | PlayerBet.GRAND_TICHU
 
@@ -37,11 +38,11 @@ export const PlaceBetButton: React.FC<{
     }, [props.bet])
 
     return (
-        <button
+        <GenericButton
             className={props.className}
             onClick={onBetPlaced}
         >
             {label}
-        </button>
+        </GenericButton>
     );
 }

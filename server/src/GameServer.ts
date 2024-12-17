@@ -10,6 +10,7 @@ import {
     zCreateRoomRequest
 } from "@tichu-ts/shared/schemas/API";
 import { BusinessError, extractErrorInfo } from "./utils/errors";
+import { z } from "zod";
 
 export class GameServer {
 
@@ -26,12 +27,19 @@ export class GameServer {
         this.express.use(express.json());
         this.express.post('/session', (req, res) => {
             GameServer.responseCreator(res, () => 
-                this.handleCreateRoomEvent(zCreateRoomRequest.parse(req.body))
+                this.handleCreateRoomRequest(zCreateRoomRequest.parse(req.body))
             );
         });
         this.express.get('/openSession', (_, res) => {
             GameServer.responseCreator(res, () => 
-                this.handleJoinGameEvent()
+                this.handleGetOpenRoomRequest()
+            );
+        });
+        this.express.get('/isSessionOpen', (req, res) => {
+            GameServer.responseCreator(res, () =>
+                this.handleCheckOpenSessionByIdRequest(
+                    z.string().parse(req.query['id'])
+                )
             );
         });
         this.express.get('/', (_, res) => {
@@ -82,7 +90,7 @@ export class GameServer {
         this.httpServer.listen(port, callback);
     }
 
-    handleCreateRoomEvent(req: CreateRoomRequest): SessionIdResponse {
+    handleCreateRoomRequest(req: CreateRoomRequest): SessionIdResponse {
         // Create new session
         const sessionId = this.generateSessionId();
         const session = new GameSession(
@@ -97,7 +105,7 @@ export class GameServer {
         };
     }
 
-    handleJoinGameEvent(): SessionIdResponse {
+    handleGetOpenRoomRequest(): SessionIdResponse {
         for (const session of this.sessions.values()) {
             if (!session.isFull()) {
                 return {
@@ -108,5 +116,14 @@ export class GameServer {
         throw new BusinessError(
             `No sessions that can be joined were found.`
         );
+    }
+
+    handleCheckOpenSessionByIdRequest(id: string): true {
+        const s = this.sessions.get(id);
+        if (!s || s.isFull())
+            throw new BusinessError(
+                `No session with this ID was found or session is full`
+            );
+        return true;
     }
 }

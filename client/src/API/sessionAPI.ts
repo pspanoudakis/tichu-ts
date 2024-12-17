@@ -21,3 +21,10 @@ export async function getOpenSession() {
         endpoint: 'openSession',
     }, zSessionAPIResponse.parse);
 }
+
+export async function isSessionWithIdOpen(id: string) {
+    return await fetchData({
+        method: 'GET',
+        endpoint: `isSessionOpen?id=${id}`
+    }, z.literal(true).parse);
+}

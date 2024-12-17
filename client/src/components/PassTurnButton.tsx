@@ -1,6 +1,7 @@
 import { useCallback, useContext } from "react";
 import { AppContext } from "../AppContext";
 import { ClientEventType } from "@tichu-ts/shared/schemas/events/ClientEvents";
+import { GenericButton } from "./ui/GenericButton";
 
 export const PassTurnButton: React.FC<{}> = () => {
 
@@ -21,7 +22,7 @@ export const PassTurnButton: React.FC<{}> = () => {
 
     return (
         canPass ?
-        <button onClick={onTurnPassed}>Pass Turn</button>
+        <GenericButton onClick={onTurnPassed}>Pass Turn</GenericButton>
         : null
     );
 }
