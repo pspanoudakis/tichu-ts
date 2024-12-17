@@ -376,14 +376,14 @@ export function handleCardsPlayedEvent(
         const thisPlayer = currentRoundState.thisPlayer;
         const newCards = e.data.tableCardKeys.map(k => new UICardInfo(k));
         const newCombination = createCombination(
-            newCards.map(c => {
+            (newCards.length > 1) ? newCards.map(c => {
                 if (c.key !== SpecialCards.Phoenix) return c;
                 assertExpression(
                     e.data.phoenixAltName,
                     `Expected Phoenix alt name, received: ${e.data.phoenixAltName}`
                 );
                 return new PhoenixCard(e.data.phoenixAltName);
-            }),
+            }) : [newCards[0]],
             currentRoundState.tableState.currentCards
         );
         assertPlayedCombinationNonNullable(newCombination);
