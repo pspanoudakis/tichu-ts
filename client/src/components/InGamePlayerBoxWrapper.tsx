@@ -62,7 +62,7 @@ export const InGamePlayerBoxWrapper: React.FC<{
                 paddingTop: '0.35vh',
                 paddingBottom: '0.35vh',
                 textAlign: 'center',
-                minHeight: '2.4vh'
+                minHeight: '2em'
             }}>
                 {text}
             </div>

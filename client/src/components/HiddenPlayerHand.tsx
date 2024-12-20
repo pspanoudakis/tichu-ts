@@ -1,11 +1,11 @@
 import React, { useContext, useMemo } from 'react';
-import { Card } from './Card';
 import { AppContext } from '../AppContext';
 import { InGamePlayerBoxWrapper } from './InGamePlayerBoxWrapper';
 import { usePlayerAccessProperty } from '../hooks/usePlayerAccessProperty';
 
 import styles from "../styles/Components.module.css"
 import { PlayerKey } from '@tichu-ts/shared/game_logic/PlayerKeys';
+import { HiddenCard } from './HiddenCard';
 
 export const HiddenPlayerHand: React.FC<{
     playerKey?: PlayerKey,
@@ -21,15 +21,10 @@ export const HiddenPlayerHand: React.FC<{
     ) ?? 0;
 
     const cardsList = useMemo(
-        () => Array.from({ length: numCards }).map((_, i) => {
-            return (
-                <Card
-                    key={i} id={i.toString()} index={i}
-                    cardImg={'cardBackground'}
-                    alt='hidden'
-                />
-            );
-        }), [numCards]
+        () => Array.from({ length: numCards }).map(
+            (_, i) => <HiddenCard index={i}/>
+        ),
+        [numCards]
     );
 
     return (
