@@ -563,6 +563,7 @@ export function handlePlayerLeftEvent(
         ...s,
         gameContext: {
             ...s.gameContext,
+            currentRoundState: undefined,
             thisPlayer: (
                 (s.gameContext.thisPlayer?.playerKey === e.playerKey) ?
                 undefined : s.gameContext.thisPlayer

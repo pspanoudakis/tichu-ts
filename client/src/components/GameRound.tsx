@@ -65,7 +65,9 @@ export const GameRound: React.FC<{}> = () => {
                             playerKey={ctxState.gameContext.teammate?.playerKey}
                             style={styles.preTradePlayerBox}
                         />
-                        <BetPhasePlayerHand gameInProgress={roundPhase === 'TRADES'}/>
+                        <BetPhasePlayerHand
+                            tradesInProgress={roundPhase === 'TRADES'}
+                        />
                     </div>
                     <div className={styles.preTradesCol}>
                         <HiddenPlayerHand

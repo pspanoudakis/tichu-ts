@@ -16,10 +16,9 @@ export const usePlayerAccessProperty = (playerKey?: PlayerKey) => {
                 return 'rightOpponent';
             case ctxState.gameContext.leftOpponent?.playerKey:
                 return 'leftOpponent';
-            case undefined:
-                return undefined;
             default:
-                throw new Error(`Cannot find player with key: '${playerKey}'`);
+                console.warn(`Cannot find player with key: '${playerKey}'`);
+                return undefined;
         }
     }, [
         playerKey,

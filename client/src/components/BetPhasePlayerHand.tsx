@@ -24,13 +24,16 @@ import {
     ClientEventType,
     TradeCardsEvent
 } from "@tichu-ts/shared/schemas/events/ClientEvents";
-import { TradeDecisions } from "../game_logic/TradeDecisions";
+import {
+    TradeDecisions,
+    getEmptyTradeDesicions
+} from "../game_logic/TradeDecisions";
 import { PlaceBetButton } from "./PlaceBetButton";
 import { PlayerBet } from "@tichu-ts/shared/game_logic/PlayerBet";
 import { GenericButton } from "./ui/GenericButton";
 
 export const BetPhasePlayerHand: React.FC<{
-    gameInProgress: boolean,
+    tradesInProgress: boolean,
 }> = (props) => {
 
     const {state: ctxState, setState: setCtxState} = useContext(AppContext);
@@ -42,11 +45,19 @@ export const BetPhasePlayerHand: React.FC<{
     const [tradesSent, setTradesSent] = useState(false);
     const [incomingTradesSent, setIncomingTradesSent] = useState(false);
     const [tradesReceived, setTradesReceived] = useState(false);
-    const [tradeDecisions, setTradeDecisions] = useState<TradeDecisions>({
-        teammate: undefined,
-        leftOp: undefined,
-        rightOp: undefined,
-    });
+    const [tradeDecisions, setTradeDecisions] =
+        useState<TradeDecisions>(getEmptyTradeDesicions());
+
+    useEffect(() => {
+        if (props.tradesInProgress) {
+            // switched from not in progress, so reset states
+            setCardsExpanded(false);
+            setTradesSent(false);
+            setIncomingTradesSent(false);
+            setTradesReceived(false);
+            setTradeDecisions(getEmptyTradeDesicions());
+        }
+    }, [props.tradesInProgress]);
 
     useEffect(() => registerEventListenersHelper({
         [ServerEventType.ALL_CARDS_REVEALED]: eventHandlerWrapper(
@@ -157,7 +168,7 @@ export const BetPhasePlayerHand: React.FC<{
                 bet={playerBet}
             />
             {
-                props.gameInProgress && (cardsExpanded ? (
+                props.tradesInProgress && (cardsExpanded ? (
                     <>
                         <div className={styles.preTradeCardList}>{
                             nonSelectedCards.map((card, i) => (

@@ -22,7 +22,8 @@ export const PhoenixSelector: React.FC<{
     useEffect(() => {
         // "componentWillUnmount"
         return () => onAltNameChange();
-      }, [onAltNameChange])
+      }, [onAltNameChange]
+    );
 
     const onSelection = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         if (!e.target.value) {
