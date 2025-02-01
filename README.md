@@ -1,6 +1,6 @@
 # Tichu-TS
 
-A simulation of the famous
+Multiplayer implementation of the famous
 [Tichu card game](https://en.wikipedia.org/wiki/Tichu),
 which has many rule variations. This particular implementation rules are described
 [here](http://www.gamecabinet.com/rules/Tichu.html).
